@@ -5,9 +5,451 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>LocalAI Sites — AI Websites for Local Businesses</title>
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --black:#0A0A0A;--white:#F8F8F5;--gray:#8A8A8A;--gray-lt:#E8E8E4;
+  --accent:#C8F542;--dark:#1A1A1A;--radius:14px;
+  --font-d:'Bebas Neue',sans-serif;--font-b:'Outfit',sans-serif;
+}
+html{scroll-behavior:smooth}
+body{font-family:var(--font-b);background:var(--black);color:var(--white);overflow-x:hidden;cursor:none}
+.cursor{width:10px;height:10px;background:var(--accent);border-radius:50%;position:fixed;top:0;left:0;pointer-events:none;z-index:9999;mix-blend-mode:difference}
+.cursor-ring{width:36px;height:36px;border:1.5px solid rgba(200,245,66,.4);border-radius:50%;position:fixed;top:0;left:0;pointer-events:none;z-index:9998;transition:transform .08s ease}
+nav{position:fixed;top:0;left:0;right:0;z-index:200;padding:20px 48px;display:flex;align-items:center;justify-content:space-between;background:linear-gradient(to bottom,rgba(10,10,10,.97),transparent);backdrop-filter:blur(8px)}
+.logo{font-family:var(--font-d);font-size:22px;letter-spacing:2px;color:var(--white);text-decoration:none}
+.logo span{color:var(--accent)}
+.nav-links{display:flex;gap:32px;list-style:none;align-items:center}
+.nav-cta{background:var(--accent)!important;color:var(--black)!important;padding:10px 22px;border-radius:100px;font-weight:700!important}
+.nav-admin{border:1px solid rgba(255,255,255,.15)!important;color:var(--white)!important;padding:10px 22px;border-radius:100px}
+.nav-link-btn{background:none;border:none;font-family:var(--font-b);color:var(--gray);font-size:13px;font-weight:500;letter-spacing:1px;text-transform:uppercase;cursor:pointer;transition:color .2s;padding:0}
+.nav-link-btn:hover{color:var(--white)}
+button.logo{background:none;border:none;font-family:var(--font-d);font-size:22px;letter-spacing:2px;color:var(--white);cursor:pointer}
+button.logo span{color:var(--accent)}
+.page{display:none;min-height:100vh}
+.page.active{display:block}
+#hero{min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:140px 24px 80px;position:relative;overflow:hidden}
+.hero-bg{position:absolute;inset:0;background:radial-gradient(ellipse 80% 60% at 50% 40%,rgba(200,245,66,.06) 0%,transparent 70%);pointer-events:none}
+.hero-grid{position:absolute;inset:0;background-image:linear-gradient(rgba(255,255,255,.025) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.025) 1px,transparent 1px);background-size:60px 60px;pointer-events:none}
+.eyebrow{display:inline-flex;align-items:center;gap:8px;background:rgba(200,245,66,.1);border:1px solid rgba(200,245,66,.25);border-radius:100px;padding:6px 16px;font-size:11px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:var(--accent);margin-bottom:32px;opacity:0;animation:fadeUp .7s ease .2s forwards}
+.eyebrow-dot{width:6px;height:6px;background:var(--accent);border-radius:50%;animation:pulse 2s infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}
+.hero-title{font-family:var(--font-d);font-size:clamp(64px,13vw,150px);line-height:.92;letter-spacing:2px;opacity:0;animation:fadeUp .8s ease .35s forwards}
+.hero-title .accent{color:var(--accent)}
+.hero-title .outline{-webkit-text-stroke:1.5px var(--white);color:transparent}
+.hero-sub{max-width:520px;font-size:17px;font-weight:300;line-height:1.7;color:var(--gray);margin:32px auto 48px;opacity:0;animation:fadeUp .8s ease .5s forwards}
+.hero-sub strong{color:var(--white);font-weight:500}
+.hero-actions{display:flex;gap:14px;flex-wrap:wrap;justify-content:center;opacity:0;animation:fadeUp .8s ease .65s forwards}
+.btn-primary{background:var(--accent);color:var(--black);border:none;padding:16px 36px;border-radius:100px;font-family:var(--font-b);font-size:15px;font-weight:700;cursor:pointer;transition:transform .2s,opacity .2s;text-decoration:none;display:inline-block}
+.btn-primary:hover{transform:scale(1.03);opacity:.9}
+.btn-ghost{background:transparent;color:var(--white);border:1.5px solid rgba(255,255,255,.2);padding:16px 36px;border-radius:100px;font-family:var(--font-b);font-size:15px;font-weight:500;cursor:pointer;transition:all .2s;text-decoration:none;display:inline-block}
+.btn-ghost:hover{border-color:rgba(255,255,255,.5);background:rgba(255,255,255,.05)}
+.hero-stats{display:flex;gap:48px;justify-content:center;flex-wrap:wrap;margin-top:80px;opacity:0;animation:fadeUp .8s ease .8s forwards}
+.stat{text-align:center}
+.stat-num{font-family:var(--font-d);font-size:44px;color:var(--accent);letter-spacing:1px;line-height:1}
+.stat-label{font-size:12px;color:var(--gray);letter-spacing:1px;text-transform:uppercase;margin-top:6px}
+@keyframes fadeUp{from{opacity:0;transform:translateY(24px)}to{opacity:1;transform:translateY(0)}}
+.marquee-wrap{border-top:1px solid rgba(255,255,255,.07);border-bottom:1px solid rgba(255,255,255,.07);padding:18px 0;overflow:hidden;background:rgba(200,245,66,.03)}
+.marquee-track{display:flex;gap:64px;animation:marquee 22s linear infinite;width:max-content}
+.marquee-item{font-family:var(--font-d);font-size:13px;letter-spacing:4px;color:var(--gray);white-space:nowrap;text-transform:uppercase}
+.marquee-item span{color:var(--accent);margin-right:8px}
+@keyframes marquee{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+.site-section{padding:120px 48px;max-width:1200px;margin:0 auto}
+.section-label{font-size:11px;font-weight:600;letter-spacing:3px;text-transform:uppercase;color:var(--accent);margin-bottom:20px}
+.section-title{font-family:var(--font-d);font-size:clamp(40px,6vw,72px);line-height:1;letter-spacing:1px;margin-bottom:20px}
+.section-sub{font-size:16px;font-weight:300;color:var(--gray);line-height:1.7;max-width:500px}
+.steps{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:2px;margin-top:64px;border:1px solid rgba(255,255,255,.07);border-radius:var(--radius);overflow:hidden}
+.step{padding:48px 32px;background:rgba(255,255,255,.02);border-right:1px solid rgba(255,255,255,.07);transition:background .3s}
+.step:last-child{border-right:none}
+.step:hover{background:rgba(200,245,66,.04)}
+.step-num{font-family:var(--font-d);font-size:56px;color:rgba(200,245,66,.15);line-height:1;margin-bottom:20px;transition:color .3s}
+.step:hover .step-num{color:rgba(200,245,66,.4)}
+.step-icon{font-size:26px;margin-bottom:14px}
+.step h3{font-size:17px;font-weight:600;margin-bottom:10px}
+.step p{font-size:14px;color:var(--gray);line-height:1.6}
+.biz-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:16px;margin-top:64px}
+.biz-card{background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.07);border-radius:var(--radius);padding:32px 24px;transition:all .3s;cursor:pointer}
+.biz-card:hover{background:rgba(200,245,66,.06);border-color:rgba(200,245,66,.3);transform:translateY(-4px)}
+.biz-icon{font-size:34px;margin-bottom:18px}
+.biz-card h3{font-size:16px;font-weight:600;margin-bottom:8px}
+.biz-card p{font-size:13px;color:var(--gray);line-height:1.5}
+.biz-tag{display:inline-block;margin-top:14px;font-size:11px;font-weight:600;letter-spacing:1px;text-transform:uppercase;color:var(--accent)}
+.pricing-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(270px,1fr));gap:20px;margin-top:64px}
+.price-card{border:1px solid rgba(255,255,255,.1);border-radius:var(--radius);padding:44px 32px;background:rgba(255,255,255,.02);position:relative;transition:transform .3s}
+.price-card:hover{transform:translateY(-6px)}
+.price-card.featured{background:var(--accent);border-color:var(--accent);color:var(--black)}
+.price-badge{position:absolute;top:-13px;left:50%;transform:translateX(-50%);background:var(--black);color:var(--accent);border:1px solid var(--accent);font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;padding:5px 14px;border-radius:100px;white-space:nowrap}
+.price-tier{font-size:12px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:var(--gray);margin-bottom:14px}
+.price-card.featured .price-tier{color:rgba(0,0,0,.5)}
+.price-amount{font-family:var(--font-d);font-size:60px;line-height:1;margin-bottom:4px}
+.price-period{font-size:13px;color:var(--gray);margin-bottom:28px}
+.price-card.featured .price-period{color:rgba(0,0,0,.5)}
+.price-features{list-style:none;margin-bottom:36px}
+.price-features li{padding:9px 0;border-bottom:1px solid rgba(255,255,255,.07);font-size:13px;color:var(--gray);display:flex;align-items:center;gap:10px}
+.price-card.featured .price-features li{border-color:rgba(0,0,0,.1);color:rgba(0,0,0,.7)}
+.price-features li::before{content:'✓';color:var(--accent);font-weight:700;font-size:12px;flex-shrink:0}
+.price-card.featured .price-features li::before{color:var(--black)}
+.price-cta{display:block;text-align:center;padding:14px;border-radius:100px;font-weight:600;font-size:14px;cursor:pointer;transition:all .2s;border:none;font-family:var(--font-b);width:100%}
+.btn-outline-cta{border:1.5px solid rgba(255,255,255,.2)!important;color:var(--white);background:transparent}
+.btn-outline-cta:hover{background:rgba(255,255,255,.07)}
+.btn-solid-cta{background:var(--black);color:var(--accent)}
+.btn-solid-cta:hover{opacity:.85}
+.calc-wrap{background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.08);border-radius:20px;padding:64px;margin-top:64px;display:grid;grid-template-columns:1fr 1fr;gap:64px;align-items:center}
+.calc-label{font-size:13px;font-weight:500;color:var(--gray);margin-bottom:12px;text-transform:uppercase;letter-spacing:1px}
+.calc-slider{width:100%;-webkit-appearance:none;height:3px;background:rgba(255,255,255,.1);border-radius:2px;outline:none;margin-bottom:32px}
+.calc-slider::-webkit-slider-thumb{-webkit-appearance:none;width:20px;height:20px;background:var(--accent);border-radius:50%;cursor:pointer}
+.calc-value{font-family:var(--font-d);font-size:80px;line-height:1;color:var(--accent)}
+.calc-desc{font-size:15px;color:var(--gray);margin-top:8px}
+.reveal{opacity:0;transform:translateY(30px);transition:opacity .7s ease,transform .7s ease}
+.reveal.in-view{opacity:1;transform:translateY(0)}
+footer{border-top:1px solid rgba(255,255,255,.07);padding:48px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:20px;max-width:1200px;margin:0 auto}
+.footer-logo{font-family:var(--font-d);font-size:20px;letter-spacing:2px}
+.footer-logo span{color:var(--accent)}
+.footer-copy{font-size:13px;color:var(--gray)}
+.footer-copy strong{color:var(--accent);font-weight:600}
+#page-onboard{background:var(--black);min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:100px 24px 48px}
+.onboard-wrap{width:100%;max-width:580px}
+.onboard-progress{display:flex;gap:6px;margin-bottom:40px}
+.prog-dot{height:3px;flex:1;background:rgba(255,255,255,.1);border-radius:2px;transition:background .4s}
+.prog-dot.done{background:var(--accent)}
+.onboard-step{display:none}
+.onboard-step.active{display:block;animation:fadeUp .4s ease}
+.onboard-label{font-size:11px;font-weight:600;letter-spacing:3px;text-transform:uppercase;color:var(--accent);margin-bottom:12px}
+.onboard-title{font-family:var(--font-d);font-size:clamp(36px,6vw,56px);line-height:1;margin-bottom:12px}
+.onboard-sub{font-size:15px;color:var(--gray);line-height:1.6;margin-bottom:36px}
+.field-group{margin-bottom:20px}
+.field-group label{display:block;font-size:12px;font-weight:600;letter-spacing:1px;text-transform:uppercase;color:var(--gray);margin-bottom:8px}
+.field-group input,.field-group select,.field-group textarea{width:100%;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.12);border-radius:12px;padding:14px 18px;color:var(--white);font-family:var(--font-b);font-size:15px;outline:none;transition:border-color .2s;cursor:text}
+.field-group input:focus,.field-group select:focus,.field-group textarea:focus{border-color:rgba(200,245,66,.5)}
+.field-group select option{background:#1a1a1a}
+.field-group textarea{resize:none;height:90px}
+.field-row{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.plan-cards{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:28px}
+.plan-pick{border:1.5px solid rgba(255,255,255,.1);border-radius:12px;padding:20px 16px;cursor:pointer;transition:all .2s;text-align:center}
+.plan-pick:hover,.plan-pick.selected{border-color:var(--accent);background:rgba(200,245,66,.06)}
+.plan-pick h4{font-size:18px;font-weight:700;margin-bottom:4px}
+.plan-pick p{font-size:11px;color:var(--gray)}
+.plan-pick .plan-price{font-family:var(--font-d);font-size:28px;color:var(--accent);margin:8px 0 4px}
+.onboard-nav{display:flex;gap:12px;margin-top:8px}
+.btn-next{background:var(--accent);color:var(--black);border:none;padding:16px 36px;border-radius:100px;font-family:var(--font-b);font-size:15px;font-weight:700;cursor:pointer;transition:all .2s;flex:1}
+.btn-next:hover{opacity:.9}
+.btn-back{background:transparent;color:var(--gray);border:1px solid rgba(255,255,255,.1);padding:16px 24px;border-radius:100px;font-family:var(--font-b);font-size:14px;cursor:pointer;transition:all .2s}
+.btn-back:hover{border-color:rgba(255,255,255,.3);color:var(--white)}
+.success-icon{font-size:64px;margin-bottom:24px}
+.success-details{background:rgba(200,245,66,.07);border:1px solid rgba(200,245,66,.2);border-radius:14px;padding:28px;margin:28px 0}
+.success-row{display:flex;justify-content:space-between;padding:10px 0;border-bottom:1px solid rgba(255,255,255,.06);font-size:14px}
+.success-row:last-child{border-bottom:none}
+.success-row span:first-child{color:var(--gray)}
+.success-row span:last-child{color:var(--white);font-weight:500;text-align:right}
+#page-admin{background:#0D0D0D;min-height:100vh;padding:100px 0 60px}
+.admin-lock{display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:80vh;padding:24px}
+.admin-lock h2{font-family:var(--font-d);font-size:42px;margin-bottom:8px}
+.admin-lock p{color:var(--gray);margin-bottom:32px;font-size:15px}
+.lock-input{background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.15);border-radius:12px;padding:14px 20px;color:var(--white);font-family:var(--font-b);font-size:16px;outline:none;width:260px;text-align:center;letter-spacing:4px;transition:border-color .2s}
+.lock-input:focus{border-color:rgba(200,245,66,.5)}
+.lock-btn{margin-top:16px;background:var(--accent);color:var(--black);border:none;padding:14px 36px;border-radius:100px;font-family:var(--font-b);font-size:15px;font-weight:700;cursor:pointer;transition:opacity .2s}
+.lock-btn:hover{opacity:.9}
+.lock-error{color:#ff6b6b;font-size:13px;margin-top:12px;display:none}
+.admin-inner{display:none;padding:0 32px}
+.admin-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:40px;flex-wrap:wrap;gap:16px}
+.admin-header h1{font-family:var(--font-d);font-size:40px;letter-spacing:1px}
+.admin-header h1 span{color:var(--accent)}
+.admin-date{font-size:13px;color:var(--gray)}
+.kpi-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:16px;margin-bottom:40px}
+.kpi-card{background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.07);border-radius:14px;padding:28px 24px}
+.kpi-label{font-size:11px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:var(--gray);margin-bottom:12px}
+.kpi-value{font-family:var(--font-d);font-size:48px;color:var(--white);line-height:1}
+.kpi-value.green{color:var(--accent)}
+.kpi-change{font-size:13px;color:var(--gray);margin-top:6px}
+.kpi-change.up{color:#4ecca3}
+.admin-grid{display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-bottom:30px}
+.admin-panel{background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.07);border-radius:14px;padding:28px}
+.admin-panel h3{font-size:14px;font-weight:600;letter-spacing:1px;text-transform:uppercase;color:var(--gray);margin-bottom:20px;display:flex;align-items:center;gap:8px}
+.admin-panel h3 span{color:var(--accent);font-size:18px}
+.client-table{width:100%;border-collapse:collapse}
+.client-table th{font-size:11px;font-weight:600;letter-spacing:1px;text-transform:uppercase;color:var(--gray);padding:0 0 14px;text-align:left;border-bottom:1px solid rgba(255,255,255,.07)}
+.client-table td{padding:14px 0;border-bottom:1px solid rgba(255,255,255,.04);font-size:13px;vertical-align:middle}
+.client-table td:last-child{text-align:right}
+.status-badge{display:inline-block;padding:4px 10px;border-radius:100px;font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.5px}
+.status-active{background:rgba(78,204,163,.15);color:#4ecca3}
+.status-pending{background:rgba(200,245,66,.12);color:var(--accent)}
+.biz-pill{display:inline-block;padding:3px 10px;border-radius:100px;font-size:11px;background:rgba(255,255,255,.07);color:var(--gray)}
+.todo-list{list-style:none}
+.todo-item{display:flex;align-items:flex-start;gap:12px;padding:14px 0;border-bottom:1px solid rgba(255,255,255,.05)}
+.todo-item:last-child{border-bottom:none}
+.todo-check{width:20px;height:20px;border-radius:6px;border:1.5px solid rgba(255,255,255,.2);flex-shrink:0;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .2s}
+.todo-check.done{background:var(--accent);border-color:var(--accent);color:var(--black)}
+.todo-text{font-size:14px;line-height:1.5}
+.todo-text.done-text{text-decoration:line-through;color:var(--gray)}
+.todo-meta{font-size:11px;color:var(--gray);margin-top:2px}
+.revenue-bar{margin-bottom:16px}
+.rev-label{display:flex;justify-content:space-between;font-size:12px;color:var(--gray);margin-bottom:6px}
+.rev-track{background:rgba(255,255,255,.07);border-radius:4px;height:8px;overflow:hidden}
+.rev-fill{background:var(--accent);border-radius:4px;height:100%;transition:width 1s ease}
+.add-client-btn{background:rgba(200,245,66,.08);border:1px dashed rgba(200,245,66,.3);color:var(--accent);padding:10px 20px;border-radius:100px;font-family:var(--font-b);font-size:13px;font-weight:600;cursor:pointer;transition:all .2s;width:100%;margin-top:16px}
+.add-client-btn:hover{background:rgba(200,245,66,.15)}
+.pipeline-list{list-style:none}
+.pipe-item{padding:14px 0;border-bottom:1px solid rgba(255,255,255,.05);display:flex;align-items:center;gap:12px}
+.pipe-item:last-child{border-bottom:none}
+.pipe-icon{width:36px;height:36px;border-radius:10px;background:rgba(255,255,255,.05);display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0}
+.pipe-info{flex:1}
+.pipe-name{font-size:14px;font-weight:500}
+.pipe-detail{font-size:12px;color:var(--gray);margin-top:2px}
+.pipe-stage{font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.5px}
+.stage-prospect{color:#ffc864}
+.stage-demo{color:var(--accent)}
+.stage-closed{color:#4ecca3}
+.monthly-total{background:rgba(200,245,66,.06);border:1px solid rgba(200,245,66,.15);border-radius:14px;padding:24px;margin-top:20px;text-align:center}
+.monthly-total .big{font-family:var(--font-d);font-size:52px;color:var(--accent);line-height:1}
+.monthly-total .label{font-size:13px;color:var(--gray);margin-top:4px}
+.logout-btn{background:transparent;border:1px solid rgba(255,255,255,.1);color:var(--gray);padding:8px 18px;border-radius:100px;font-family:var(--font-b);font-size:13px;cursor:pointer;transition:all .2s}
+.logout-btn:hover{border-color:rgba(255,255,255,.3);color:var(--white)}
+@media(max-width:768px){
+  nav{padding:18px 20px}
+  .nav-links{display:none}
+  .site-section{padding:80px 20px}
+  .calc-wrap{grid-template-columns:1fr;gap:36px;padding:32px 20px}
+  .admin-grid{grid-template-columns:1fr}
+  .admin-inner{padding:0 16px}
+  .field-row{grid-template-columns:1fr}
+  .plan-cards{grid-template-columns:1fr}
+  .hero-stats{gap:24px}
+  footer{flex-direction:column;text-align:center}
+}
+</style>
 </head>
 <body>
-<h1>Coming Soon - LocalAI Sites</h1>
-<p>Built by Aman. Tucker, Georgia.</p>
+<div class="cursor" id="cursor"></div>
+<div class="cursor-ring" id="cursorRing"></div>
+<nav>
+  <button class="logo" onclick="showPage('home')">LOCAL<span>AI</span></button>
+  <ul class="nav-links">
+    <li><button class="nav-link-btn" onclick="showPage('home');setTimeout(()=>document.getElementById('how').scrollIntoView({behavior:'smooth'}),50)">How It Works</button></li>
+    <li><button class="nav-link-btn" onclick="showPage('home');setTimeout(()=>document.getElementById('industries').scrollIntoView({behavior:'smooth'}),50)">Industries</button></li>
+    <li><button class="nav-link-btn" onclick="showPage('home');setTimeout(()=>document.getElementById('pricing').scrollIntoView({behavior:'smooth'}),50)">Pricing</button></li>
+    <li><button class="nav-link-btn nav-admin" onclick="showPage('admin')">Admin ⚙️</button></li>
+    <li><button class="nav-link-btn nav-cta" onclick="showPage('onboard')">Get Started →</button></li>
+  </ul>
+</nav>
+<div id="page-home" class="page active">
+<section id="hero">
+  <div class="hero-bg"></div><div class="hero-grid"></div>
+  <div class="eyebrow"><div class="eyebrow-dot"></div>Now Available Across the United States</div>
+  <h1 class="hero-title">YOUR BUSINESS<br><span class="outline">DESERVES A</span><br><span class="accent">SMART SITE</span></h1>
+  <p class="hero-sub">We build <strong>AI-powered websites with built-in chatbots</strong> for local businesses — dental offices, restaurants, salons, hookah lounges — live in under 24 hours.</p>
+  <div class="hero-actions">
+    <button class="btn-primary" onclick="showPage('onboard')">Build My Website →</button>
+    <button class="btn-ghost" onclick="document.getElementById('how').scrollIntoView({behavior:'smooth'})">See How It Works</button>
+  </div>
+  <div class="hero-stats">
+    <div class="stat"><div class="stat-num">24H</div><div class="stat-label">Launch Time</div></div>
+    <div class="stat"><div class="stat-num">24/7</div><div class="stat-label">AI Chatbot Active</div></div>
+    <div class="stat"><div class="stat-num">$0</div><div class="stat-label">Tech Skills Needed</div></div>
+    <div class="stat"><div class="stat-num">100%</div><div class="stat-label">Done For You</div></div>
+  </div>
+</section>
+<div class="marquee-wrap"><div class="marquee-track">
+  <div class="marquee-item"><span>✦</span>Dental Offices</div><div class="marquee-item"><span>✦</span>Hookah Lounges</div><div class="marquee-item"><span>✦</span>Restaurants</div><div class="marquee-item"><span>✦</span>Hair Salons</div><div class="marquee-item"><span>✦</span>Nail Salons</div><div class="marquee-item"><span>✦</span>Barbershops</div><div class="marquee-item"><span>✦</span>Med Spas</div><div class="marquee-item"><span>✦</span>Chiropractors</div><div class="marquee-item"><span>✦</span>Law Offices</div><div class="marquee-item"><span>✦</span>Gyms</div>
+  <div class="marquee-item"><span>✦</span>Dental Offices</div><div class="marquee-item"><span>✦</span>Hookah Lounges</div><div class="marquee-item"><span>✦</span>Restaurants</div><div class="marquee-item"><span>✦</span>Hair Salons</div><div class="marquee-item"><span>✦</span>Nail Salons</div><div class="marquee-item"><span>✦</span>Barbershops</div><div class="marquee-item"><span>✦</span>Med Spas</div><div class="marquee-item"><span>✦</span>Chiropractors</div><div class="marquee-item"><span>✦</span>Law Offices</div><div class="marquee-item"><span>✦</span>Gyms</div>
+</div></div>
+<div style="background:rgba(255,255,255,.01);border-top:1px solid rgba(255,255,255,.05)">
+<section class="site-section" id="how">
+  <div class="reveal"><div class="section-label">Process</div><h2 class="section-title">HOW IT WORKS</h2><p class="section-sub">From zero to a live AI-powered website in 3 simple steps.</p></div>
+  <div class="steps reveal">
+    <div class="step"><div class="step-num">01</div><div class="step-icon">📋</div><h3>Tell Us About Your Business</h3><p>Fill out our simple form — name, type, hours, phone, services. Takes under 3 minutes.</p></div>
+    <div class="step"><div class="step-num">02</div><div class="step-icon">⚡</div><h3>We Build It For You</h3><p>We create a beautiful, fast website with a custom AI chatbot trained on your business details.</p></div>
+    <div class="step"><div class="step-num">03</div><div class="step-icon">🚀</div><h3>Go Live in 24 Hours</h3><p>Your site goes live. Your chatbot starts handling questions 24/7 so your team focuses on customers.</p></div>
+    <div class="step"><div class="step-num">04</div><div class="step-icon">🔄</div><h3>We Maintain Everything</h3><p>Hours change? New service? We update your site and chatbot every month, included in your plan.</p></div>
+  </div>
+</section></div>
+<section class="site-section" id="industries">
+  <div class="reveal"><div class="section-label">Industries</div><h2 class="section-title">BUILT FOR EVERY <span style="color:var(--accent)">LOCAL</span> BUSINESS</h2><p class="section-sub">If you have a local business and a phone that won't stop ringing — we can help.</p></div>
+  <div class="biz-grid reveal">
+    <div class="biz-card"><div class="biz-icon">🦷</div><h3>Dental Offices</h3><p>Handle appointments, insurance questions & emergencies automatically.</p><div class="biz-tag">Most Popular</div></div>
+    <div class="biz-card"><div class="biz-icon">💨</div><h3>Hookah Lounges</h3><p>Show your menu, handle reservations, answer hours & pricing 24/7.</p><div class="biz-tag">High Demand</div></div>
+    <div class="biz-card"><div class="biz-icon">🍽️</div><h3>Restaurants</h3><p>Display your menu, handle bookings, answer customer questions instantly.</p><div class="biz-tag">Fast Growing</div></div>
+    <div class="biz-card"><div class="biz-icon">💇</div><h3>Salons & Barbershops</h3><p>Book appointments, show services and pricing, handle walk-in questions.</p><div class="biz-tag">Easy Sell</div></div>
+    <div class="biz-card"><div class="biz-icon">🏃</div><h3>Gyms & Fitness</h3><p>Showcase classes, membership pricing, and handle new member inquiries.</p><div class="biz-tag">Growing</div></div>
+    <div class="biz-card"><div class="biz-icon">⚖️</div><h3>Law & Medical</h3><p>Professional sites that handle consultations, FAQs, and client intake.</p><div class="biz-tag">Premium</div></div>
+  </div>
+</section>
+<div style="background:rgba(255,255,255,.01);border-top:1px solid rgba(255,255,255,.05)">
+<section class="site-section" id="pricing">
+  <div class="reveal"><div class="section-label">Pricing</div><h2 class="section-title">SIMPLE, FLAT PRICING</h2><p class="section-sub">No hidden fees. No surprises. Cancel anytime.</p></div>
+  <div class="pricing-grid reveal">
+    <div class="price-card"><div class="price-tier">Starter</div><div class="price-amount">$79</div><div class="price-period">/ month + $100 setup</div><ul class="price-features"><li>Custom website up to 3 pages</li><li>AI chatbot basic Q&A</li><li>Mobile-friendly design</li><li>Monthly updates</li><li>Contact form & map</li></ul><button class="price-cta btn-outline-cta" onclick="showPage('onboard')">Get Started</button></div>
+    <div class="price-card featured"><div class="price-badge">BEST VALUE</div><div class="price-tier">Standard</div><div class="price-amount">$149</div><div class="price-period">/ month + $200 setup</div><ul class="price-features"><li>Everything in Starter</li><li>Smart AI chatbot + booking</li><li>Up to 6 pages</li><li>Google Maps + reviews</li><li>Weekly updates</li><li>Priority support</li></ul><button class="price-cta btn-solid-cta" onclick="showPage('onboard')">Get Started</button></div>
+    <div class="price-card"><div class="price-tier">Premium</div><div class="price-amount">$249</div><div class="price-period">/ month + $300 setup</div><ul class="price-features"><li>Everything in Standard</li><li>Full AI booking system</li><li>Google Business optimization</li><li>Monthly performance report</li><li>Social media templates</li><li>Daily updates + dedicated support</li></ul><button class="price-cta btn-outline-cta" onclick="showPage('onboard')">Get Started</button></div>
+  </div>
+</section></div>
+<section class="site-section">
+  <div class="reveal"><div class="section-label">Income Calculator</div><h2 class="section-title">YOUR MONTHLY <span style="color:var(--accent)">INCOME</span></h2><p class="section-sub">See how much you can earn selling this service.</p></div>
+  <div class="calc-wrap reveal">
+    <div>
+      <div class="calc-label">Number of Clients: <span id="clientCount">5</span></div>
+      <input type="range" class="calc-slider" id="clientSlider" min="1" max="50" value="5">
+      <div class="calc-label">Average Plan: <span id="planName">Standard ($149/mo)</span></div>
+      <input type="range" class="calc-slider" id="planSlider" min="0" max="2" value="1" step="1">
+    </div>
+    <div>
+      <div style="font-size:12px;color:var(--gray);text-transform:uppercase;letter-spacing:1px;margin-bottom:8px">Monthly Recurring Income</div>
+      <div class="calc-value" id="calcResult">$745</div>
+      <div class="calc-desc" id="calcDesc">5 clients x $149/mo = $745/month</div>
+      <div style="margin-top:20px;font-size:13px;color:var(--gray)">+ One-time setup fees are extra income on top</div>
+    </div>
+  </div>
+</section>
+<footer>
+  <div class="footer-logo">LOCAL<span>AI</span></div>
+  <div class="footer-copy">Built by <strong>Aman</strong> · Serving the United States · © 2025 LocalAI Sites</div>
+  <div style="font-size:13px;color:var(--gray)">📍 Based in Tucker, Georgia</div>
+</footer>
+</div>
+<div id="page-onboard" class="page">
+  <div class="onboard-wrap">
+    <div class="onboard-progress"><div class="prog-dot done" id="p1"></div><div class="prog-dot" id="p2"></div><div class="prog-dot" id="p3"></div><div class="prog-dot" id="p4"></div></div>
+    <div class="onboard-step active" id="step1">
+      <div class="onboard-label">Step 1 of 3</div>
+      <h2 class="onboard-title">LET'S BUILD YOUR SITE</h2>
+      <p class="onboard-sub">Tell us about your business — takes less than 3 minutes.</p>
+      <div class="field-group"><label>Business Name *</label><input id="f-name" type="text" placeholder="e.g. Tucker Family Dental"></div>
+      <div class="field-row">
+        <div class="field-group"><label>Business Type *</label><select id="f-type"><option value="">Select...</option><option value="dental">🦷 Dental Office</option><option value="hookah">💨 Hookah Lounge</option><option value="restaurant">🍽️ Restaurant</option><option value="salon">💇 Salon / Barbershop</option><option value="gym">🏃 Gym / Fitness</option><option value="medical">🏥 Medical / Clinic</option><option value="law">⚖️ Law Office</option><option value="other">🏢 Other Business</option></select></div>
+        <div class="field-group"><label>City & State *</label><input id="f-city" type="text" placeholder="e.g. Tucker, GA"></div>
+      </div>
+      <div class="field-row">
+        <div class="field-group"><label>Phone Number</label><input id="f-phone" type="text" placeholder="(678) 000-0000"></div>
+        <div class="field-group"><label>Website (if any)</label><input id="f-web" type="text" placeholder="e.g. mysite.com"></div>
+      </div>
+      <div class="onboard-nav"><button class="btn-next" onclick="nextStep(1)">Continue →</button></div>
+    </div>
+    <div class="onboard-step" id="step2">
+      <div class="onboard-label">Step 2 of 3</div>
+      <h2 class="onboard-title">YOUR SERVICES & HOURS</h2>
+      <p class="onboard-sub">This helps us train your AI chatbot correctly.</p>
+      <div class="field-group"><label>Main Services Offered</label><textarea id="f-services" placeholder="e.g. Cleanings, fillings, crowns, whitening..."></textarea></div>
+      <div class="field-row">
+        <div class="field-group"><label>Weekday Hours</label><input id="f-hours-wd" type="text" placeholder="e.g. Mon-Fri 8am-5pm"></div>
+        <div class="field-group"><label>Weekend Hours</label><input id="f-hours-we" type="text" placeholder="e.g. Sat 9am-2pm, Sun Closed"></div>
+      </div>
+      <div class="field-group"><label>Anything else the chatbot should know?</label><textarea id="f-notes" placeholder="e.g. We accept Delta Dental, Cigna. Free parking."></textarea></div>
+      <div class="onboard-nav"><button class="btn-back" onclick="prevStep(2)">← Back</button><button class="btn-next" onclick="nextStep(2)">Continue →</button></div>
+    </div>
+    <div class="onboard-step" id="step3">
+      <div class="onboard-label">Step 3 of 3</div>
+      <h2 class="onboard-title">PICK YOUR PLAN</h2>
+      <p class="onboard-sub">All plans include a custom website + AI chatbot.</p>
+      <div class="plan-cards">
+        <div class="plan-pick" id="plan-starter" onclick="selectPlan('starter')"><p style="font-size:11px;color:var(--gray);letter-spacing:1px;text-transform:uppercase">Starter</p><div class="plan-price">$79</div><p style="font-size:11px;color:var(--gray)">/month +$100 setup</p></div>
+        <div class="plan-pick selected" id="plan-standard" onclick="selectPlan('standard')"><p style="font-size:11px;color:var(--accent);letter-spacing:1px;text-transform:uppercase">★ Best Value</p><div class="plan-price">$149</div><p style="font-size:11px;color:var(--gray)">/month +$200 setup</p></div>
+        <div class="plan-pick" id="plan-premium" onclick="selectPlan('premium')"><p style="font-size:11px;color:var(--gray);letter-spacing:1px;text-transform:uppercase">Premium</p><div class="plan-price">$249</div><p style="font-size:11px;color:var(--gray)">/month +$300 setup</p></div>
+      </div>
+      <div class="field-row">
+        <div class="field-group"><label>Your Name *</label><input id="f-owner" type="text" placeholder="Business owner name"></div>
+        <div class="field-group"><label>Your Email *</label><input id="f-email" type="email" placeholder="your@email.com"></div>
+      </div>
+      <div class="onboard-nav"><button class="btn-back" onclick="prevStep(3)">← Back</button><button class="btn-next" onclick="nextStep(3)">Submit →</button></div>
+    </div>
+    <div class="onboard-step" id="step4">
+      <div class="success-icon">🎉</div>
+      <div class="onboard-label">You're All Set!</div>
+      <h2 class="onboard-title">REQUEST RECEIVED!</h2>
+      <p class="onboard-sub">Aman will contact you within 24 hours to get started.</p>
+      <div class="success-details" id="orderSummary"></div>
+      <p style="font-size:14px;color:var(--gray);line-height:1.7;margin-bottom:28px">📞 Expect a call within <strong style="color:var(--white)">24 hours</strong> to confirm details.<br><br>💬 Questions? Text: <strong style="color:var(--accent)">(678) 000-0000</strong></p>
+      <button class="btn-next" onclick="showPage('home')">← Back to Home</button>
+    </div>
+  </div>
+</div>
+<div id="page-admin" class="page">
+  <div class="admin-lock" id="adminLock">
+    <div style="font-size:48px;margin-bottom:16px">🔐</div>
+    <h2>Admin Access</h2>
+    <p>Enter your password to access the dashboard</p>
+    <input type="password" class="lock-input" id="adminPass" placeholder="••••••••" onkeydown="if(event.key==='Enter')unlockAdmin()">
+    <br><button class="lock-btn" onclick="unlockAdmin()">Unlock Dashboard</button>
+    <div class="lock-error" id="lockError">Incorrect password. Try again.</div>
+    <div style="margin-top:20px;font-size:12px;color:var(--gray)">Hint: your name + 2025</div>
+  </div>
+  <div class="admin-inner" id="adminInner">
+    <div class="admin-header">
+      <div><h1>AMAN'S <span>DASHBOARD</span></h1><div class="admin-date" id="adminDate"></div></div>
+      <div style="display:flex;gap:12px;align-items:center"><div style="font-size:13px;color:var(--gray)">LocalAI Sites · Admin v1.0</div><button class="logout-btn" onclick="lockAdmin()">Lock 🔒</button></div>
+    </div>
+    <div class="kpi-grid">
+      <div class="kpi-card"><div class="kpi-label">Monthly Recurring</div><div class="kpi-value green" id="kpi-mrr">$0</div><div class="kpi-change up" id="kpi-mrr-change">Start your first client!</div></div>
+      <div class="kpi-card"><div class="kpi-label">Active Clients</div><div class="kpi-value" id="kpi-clients">0</div><div class="kpi-change">websites running live</div></div>
+      <div class="kpi-card"><div class="kpi-label">Setup Fees Earned</div><div class="kpi-value green" id="kpi-setup">$0</div><div class="kpi-change">one-time payments</div></div>
+      <div class="kpi-card"><div class="kpi-label">Pipeline</div><div class="kpi-value" id="kpi-pipeline">0</div><div class="kpi-change">prospects interested</div></div>
+    </div>
+    <div class="admin-grid">
+      <div class="admin-panel"><h3><span>💼</span>Active Clients</h3><table class="client-table"><thead><tr><th>Business</th><th>Plan</th><th>Status</th><th>$/mo</th></tr></thead><tbody id="clientTableBody"></tbody></table><button class="add-client-btn" onclick="addClientPrompt()">+ Add New Client</button></div>
+      <div class="admin-panel"><h3><span>🎯</span>Sales Pipeline</h3><ul class="pipeline-list" id="pipelineList"></ul><button class="add-client-btn" onclick="addProspectPrompt()">+ Add Prospect</button></div>
+    </div>
+    <div class="admin-grid">
+      <div class="admin-panel"><h3><span>✅</span>This Week's Tasks</h3><ul class="todo-list" id="todoList"></ul><button class="add-client-btn" onclick="addTodoPrompt()">+ Add Task</button></div>
+      <div class="admin-panel"><h3><span>📊</span>Revenue by Plan</h3><div id="revenueBreakdown"></div><div class="monthly-total"><div class="big" id="totalMRR">$0</div><div class="label">Total Monthly Recurring Revenue</div></div></div>
+    </div>
+  </div>
+</div>
+<script>
+const cur=document.getElementById('cursor'),ring=document.getElementById('cursorRing');
+let mx=0,my=0,rx=0,ry=0;
+document.addEventListener('mousemove',e=>{mx=e.clientX;my=e.clientY;});
+(function a(){cur.style.transform=`translate(${mx-5}px,${my-5}px)`;rx+=(mx-rx)*.12;ry+=(my-ry)*.12;ring.style.transform=`translate(${rx-18}px,${ry-18}px)`;requestAnimationFrame(a)})();
+function showPage(id){document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));document.getElementById('page-'+id).classList.add('active');window.scrollTo(0,0);if(id==='admin'){document.getElementById('adminDate').textContent=new Date().toLocaleDateString('en-US',{weekday:'long',year:'numeric',month:'long',day:'numeric'});}}
+const obs=new IntersectionObserver(e=>{e.forEach(x=>{if(x.isIntersecting)x.target.classList.add('in-view');});},{threshold:.1});
+document.querySelectorAll('.reveal').forEach(r=>obs.observe(r));
+const plans=[{name:'Starter ($79/mo)',price:79},{name:'Standard ($149/mo)',price:149},{name:'Premium ($249/mo)',price:249}];
+function updateCalc(){const c=parseInt(document.getElementById('clientSlider').value),pi=parseInt(document.getElementById('planSlider').value),p=plans[pi];document.getElementById('clientCount').textContent=c;document.getElementById('planName').textContent=p.name;document.getElementById('calcResult').textContent='$'+(c*p.price).toLocaleString();document.getElementById('calcDesc').textContent=c+' clients x $'+p.price+'/mo = $'+(c*p.price).toLocaleString()+'/month';}
+document.getElementById('clientSlider').addEventListener('input',updateCalc);
+document.getElementById('planSlider').addEventListener('input',updateCalc);
+let currentStep=1,selectedPlan='standard';
+function nextStep(from){
+  if(from===1&&(!document.getElementById('f-name').value.trim()||!document.getElementById('f-type').value||!document.getElementById('f-city').value.trim())){alert('Please fill in Business Name, Type, and City.');return;}
+  if(from===3){if(!document.getElementById('f-owner').value.trim()||!document.getElementById('f-email').value.trim()){alert('Please enter your name and email.');return;}buildOrderSummary();saveClient();}
+  document.getElementById('step'+from).classList.remove('active');
+  currentStep=from+1;
+  document.getElementById('step'+currentStep).classList.add('active');
+  document.getElementById('p'+currentStep).classList.add('done');
+  window.scrollTo(0,0);
+}
+function prevStep(from){document.getElementById('step'+from).classList.remove('active');currentStep=from-1;document.getElementById('step'+currentStep).classList.add('active');window.scrollTo(0,0);}
+function selectPlan(p){selectedPlan=p;['starter','standard','premium'].forEach(x=>document.getElementById('plan-'+x).classList.toggle('selected',x===p));}
+function buildOrderSummary(){const pd={starter:{price:'$79/mo',setup:'$100'},standard:{price:'$149/mo',setup:'$200'},premium:{price:'$249/mo',setup:'$300'}}[selectedPlan];const rows=[['Business',document.getElementById('f-name').value],['Type',document.getElementById('f-type').options[document.getElementById('f-type').selectedIndex].text],['Location',document.getElementById('f-city').value],['Plan',selectedPlan+' — '+pd.price],['Setup Fee',pd.setup],['Contact',document.getElementById('f-owner').value],['Email',document.getElementById('f-email').value]];document.getElementById('orderSummary').innerHTML=rows.map(r=>'<div class="success-row"><span>'+r[0]+'</span><span>'+r[1]+'</span></div>').join('');}
+function getS(k){try{return JSON.parse(localStorage.getItem(k)||'[]')}catch{return[]}}
+function setS(k,v){localStorage.setItem(k,JSON.stringify(v))}
+function saveClient(){const pp={starter:79,standard:149,premium:249},ps={starter:100,standard:200,premium:300},c=getS('lai_clients');c.push({id:Date.now(),name:document.getElementById('f-name').value,type:document.getElementById('f-type').value,city:document.getElementById('f-city').value,plan:selectedPlan,monthly:pp[selectedPlan],setup:ps[selectedPlan],status:'pending',email:document.getElementById('f-email').value,owner:document.getElementById('f-owner').value,date:new Date().toLocaleDateString()});setS('lai_clients',c);}
+const PASS='aman2025';
+function unlockAdmin(){if(document.getElementById('adminPass').value===PASS){document.getElementById('adminLock').style.display='none';document.getElementById('adminInner').style.display='block';loadDashboard();}else{document.getElementById('lockError').style.display='block';document.getElementById('adminPass').value='';}}
+function lockAdmin(){document.getElementById('adminLock').style.display='flex';document.getElementById('adminInner').style.display='none';document.getElementById('adminPass').value='';document.getElementById('lockError').style.display='none';}
+function loadDashboard(){
+  const clients=getS('lai_clients'),pipeline=getS('lai_pipeline'),todos=getS('lai_todos');
+  const active=clients.filter(c=>c.status==='active');
+  const mrr=active.reduce((s,c)=>s+c.monthly,0),setup=clients.reduce((s,c)=>s+(c.status==='active'?c.setup:0),0);
+  document.getElementById('kpi-mrr').textContent='$'+mrr.toLocaleString();
+  document.getElementById('kpi-clients').textContent=active.length;
+  document.getElementById('kpi-setup').textContent='$'+setup.toLocaleString();
+  document.getElementById('kpi-pipeline').textContent=pipeline.length;
+  if(mrr>0)document.getElementById('kpi-mrr-change').textContent='↑ $'+mrr.toLocaleString()+' every month';
+  const tbody=document.getElementById('clientTableBody');
+  tbody.innerHTML=clients.length===0?'<tr><td colspan="4" style="color:var(--gray);padding:20px 0;font-size:13px">No clients yet — go close your first deal! 🚀</td></tr>':clients.map(c=>'<tr><td><div style="font-weight:500">'+c.name+'</div><div style="font-size:11px;color:var(--gray)">'+c.city+'</div></td><td><span class="biz-pill">'+c.plan+'</span></td><td><span class="status-badge status-'+c.status+'">'+c.status+'</span></td><td style="font-family:Bebas Neue;font-size:18px;color:var(--accent)">$'+c.monthly+'</td></tr>').join('');
+  const icons={dental:'🦷',hookah:'💨',restaurant:'🍽️',salon:'💇',gym:'🏃',other:'🏢'};
+  const pList=document.getElementById('pipelineList');
+  pList.innerHTML=pipeline.length===0?'<li style="color:var(--gray);font-size:13px;padding:16px 0">No prospects yet!</li>':pipeline.map(p=>'<li class="pipe-item"><div class="pipe-icon">'+(icons[p.type]||'🏢')+'</div><div class="pipe-info"><div class="pipe-name">'+p.name+'</div><div class="pipe-detail">'+p.city+' · '+(p.contact||'No contact')+'</div></div><div class="pipe-stage stage-'+p.stage+'">'+p.stage+'</div></li>').join('');
+  const defaultTodos=[{text:'Walk into Tucker Family Dental with demo',meta:'This week · Tucker, GA',done:false},{text:'Pitch to Mirza Hookah Lounge boss',meta:'This week · Lawrenceville, GA',done:false},{text:'Build demo for 2nd dental office',meta:'After first meeting',done:false}];
+  const allTodos=todos.length>0?todos:defaultTodos;
+  document.getElementById('todoList').innerHTML=allTodos.map((t,i)=>'<li class="todo-item"><div class="todo-check '+(t.done?'done':'')+'" onclick="toggleTodo('+i+')">'+(t.done?'✓':'')+'</div><div><div class="todo-text '+(t.done?'done-text':'')+'">'+t.text+'</div><div class="todo-meta">'+t.meta+'</div></div></li>').join('');
+  if(todos.length===0)setS('lai_todos',defaultTodos);
+  const pc={starter:0,standard:0,premium:0};active.forEach(c=>{if(pc[c.plan]!==undefined)pc[c.plan]++;});
+  const pp2={starter:79,standard:149,premium:249},maxR=Math.max(pc.starter*79,pc.standard*149,pc.premium*249,1);
+  document.getElementById('revenueBreakdown').innerHTML=Object.entries(pc).map(([pl,ct])=>{const rv=ct*pp2[pl],pct=Math.round(rv/maxR*100)||0;return'<div class="revenue-bar"><div class="rev-label"><span>'+pl.charAt(0).toUpperCase()+pl.slice(1)+' ('+ct+' clients)</span><span>$'+rv+'/mo</span></div><div class="rev-track"><div class="rev-fill" style="width:'+pct+'%"></div></div></div>';}).join('');
+  document.getElementById('totalMRR').textContent='$'+mrr.toLocaleString();
+}
+function toggleTodo(i){const t=getS('lai_todos');if(t[i])t[i].done=!t[i].done;setS('lai_todos',t);loadDashboard();}
+function addClientPrompt(){const n=prompt('Business name?');if(!n)return;const ci=prompt('City?')||'',ty=prompt('Type?(dental/hookah/restaurant/salon/gym/other)')||'other',pl=prompt('Plan?(starter/standard/premium)')||'standard',pp={starter:79,standard:149,premium:249},ps={starter:100,standard:200,premium:300},c=getS('lai_clients');c.push({id:Date.now(),name:n,city:ci,type:ty,plan:pl,monthly:pp[pl]||149,setup:ps[pl]||200,status:'active',date:new Date().toLocaleDateString()});setS('lai_clients',c);loadDashboard();}
+function addProspectPrompt(){const n=prompt('Business name?');if(!n)return;const ci=prompt('City?')||'',ty=prompt('Type?')||'other',co=prompt('Contact?')||'',st=prompt('Stage?(prospect/demo/closed)')||'prospect',p=getS('lai_pipeline');p.push({id:Date.now(),name:n,city:ci,type:ty,contact:co,stage:st});setS('lai_pipeline',p);loadDashboard();}
+function addTodoPrompt(){const t=prompt('Task?');if(!t)return;const m=prompt('Details?')||'',todos=getS('lai_todos');todos.push({text:t,meta:m,done:false});setS('lai_todos',todos);loadDashboard();}
+</script>
 </body>
 </html>
