@@ -1359,9 +1359,9 @@ transition: opacity 0.6s ease, transform 0.6s ease;
         <div class="contact-icon">📞</div>
         <div><div class="contact-label">Call or Text</div><div class="contact-value">(615) 739-1914</div></div>
       </a>
-      <a href="/cdn-cgi/l/email-protection#4c2d212d2220232f2d202d250c2b212d2520622f2321" class="contact-item">
+      <a href="mailto:amanlocalai@gmail.com" class="contact-item">
         <div class="contact-icon">📧</div>
-        <div><div class="contact-label">Email</div><div class="contact-value"><span class="__cf_email__" data-cfemail="482925292624272b29242921082f25292124662b2725">[email&#160;protected]</span></div></div>
+        <div><div class="contact-label">Email</div><div class="contact-value">amanlocalai@gmail.com</div></div>
       </a>
       <a href="https://cash.app/$amanlocalai" target="_blank" class="contact-item">
         <div class="contact-icon">💵</div>
@@ -1446,52 +1446,51 @@ transition: opacity 0.6s ease, transform 0.6s ease;
   </div>
 </div>
 
-<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
-
+<script>
 // SMOOTH SCROLL HELPER
 function goTo(id) {
-closeMenu();
-const el = document.getElementById(id);
-if (el) el.scrollIntoView({ behavior: ‘smooth’, block: ‘start’ });
+  closeMenu();
+  const el = document.getElementById(id);
+  if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
 }
 
 // MARQUEE
-const industries = [‘✦ Dental Offices’,‘✦ Hookah Lounges’,‘✦ Restaurants’,‘✦ Hair Salons’,‘✦ Nail Salons’,‘✦ Barbershops’,‘✦ Med Spas’,‘✦ Chiropractors’,‘✦ Law Offices’,‘✦ Gyms & Fitness’];
-const track = document.getElementById(‘marqueeTrack’);
-const items = […industries, …industries].map(i => `<div class="marquee-item">${i}</div>`).join(’’);
+const industries = ['✦ Dental Offices','✦ Hookah Lounges','✦ Restaurants','✦ Hair Salons','✦ Nail Salons','✦ Barbershops','✦ Med Spas','✦ Chiropractors','✦ Law Offices','✦ Gyms & Fitness'];
+const track = document.getElementById('marqueeTrack');
+const items = [...industries, ...industries].map(i => `<div class="marquee-item">${i}</div>`).join('');
 track.innerHTML = items;
 
 // HAMBURGER
 function toggleMenu() {
-const h = document.getElementById(‘hamburger’);
-const m = document.getElementById(‘mobileMenu’);
-h.classList.toggle(‘open’);
-m.classList.toggle(‘open’);
+  const h = document.getElementById('hamburger');
+  const m = document.getElementById('mobileMenu');
+  h.classList.toggle('open');
+  m.classList.toggle('open');
 }
 function closeMenu() {
-document.getElementById(‘hamburger’).classList.remove(‘open’);
-document.getElementById(‘mobileMenu’).classList.remove(‘open’);
+  document.getElementById('hamburger').classList.remove('open');
+  document.getElementById('mobileMenu').classList.remove('open');
 }
 
 // CALCULATOR
 let currentPlan = 149;
 function setPlan(price, btn) {
-currentPlan = price;
-document.querySelectorAll(’.plan-btn’).forEach(b => b.classList.remove(‘active’));
-btn.classList.add(‘active’);
-updateCalc();
+  currentPlan = price;
+  document.querySelectorAll('.plan-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  updateCalc();
 }
 function updateCalc() {
-const clients = parseInt(document.getElementById(‘clientSlider’).value);
-const monthly = clients * currentPlan;
-const annual = monthly * 12;
-document.getElementById(‘clientDisplay’).textContent = `${clients} client${clients !== 1 ? 's' : ''}`;
-const el = document.getElementById(‘calcValue’);
-el.style.transform = ‘scale(1.05)’;
-el.textContent = `$${monthly.toLocaleString()}`;
-setTimeout(() => el.style.transform = ‘scale(1)’, 200);
-document.getElementById(‘calcSub’).textContent = `${clients} clients × $${currentPlan}/mo`;
-document.getElementById(‘calcAnnual’).textContent = `= $${annual.toLocaleString()}/year 🚀`;
+  const clients = parseInt(document.getElementById('clientSlider').value);
+  const monthly = clients * currentPlan;
+  const annual = monthly * 12;
+  document.getElementById('clientDisplay').textContent = `${clients} client${clients !== 1 ? 's' : ''}`;
+  const el = document.getElementById('calcValue');
+  el.style.transform = 'scale(1.05)';
+  el.textContent = `$${monthly.toLocaleString()}`;
+  setTimeout(() => el.style.transform = 'scale(1)', 200);
+  document.getElementById('calcSub').textContent = `${clients} clients × $${currentPlan}/mo`;
+  document.getElementById('calcAnnual').textContent = `= $${annual.toLocaleString()}/year 🚀`;
 }
 
 // FORM STATE
@@ -1500,14 +1499,67 @@ const totalSteps = 4;
 const formData = {};
 
 function renderForm() {
-const progress = (formStep / totalSteps) * 100;
-document.getElementById(‘progressBar’).style.width = progress + ‘%’;
-const container = document.getElementById(‘formContainer’);
+  const progress = (formStep / totalSteps) * 100;
+  document.getElementById('progressBar').style.width = progress + '%';
+  const container = document.getElementById('formContainer');
 
-if (formStep === 1) {
-container.innerHTML = ` <div class="form-header"> <div class="form-step-label">Step 1 of 4</div> <div class="form-step-count">Tell Us About Your Business</div> </div> <div class="form-body"> <div class="form-title">Let's Build Your Site</div> <div class="form-subtitle">Tell us about your business — this takes less than 3 minutes.</div> <div class="form-group"><label>Business Name *</label><input type="text" id="f_name" placeholder="e.g. Bright Smiles Dental" value="${formData.name||''}"></div> <div class="form-group"><label>Business Type *</label> <select id="f_type"> <option value="">Select...</option> <option ${formData.type==='dental'?'selected':''} value="dental">🦷 Dental Office</option> <option ${formData.type==='hookah'?'selected':''} value="hookah">💨 Hookah Lounge</option> <option ${formData.type==='restaurant'?'selected':''} value="restaurant">🍽️ Restaurant</option> <option ${formData.type==='salon'?'selected':''} value="salon">💇 Salon / Barbershop</option> <option ${formData.type==='gym'?'selected':''} value="gym">🏃 Gym / Fitness</option> <option ${formData.type==='medical'?'selected':''} value="medical">🏥 Medical / Clinic</option> <option ${formData.type==='law'?'selected':''} value="law">⚖️ Law Office</option> <option ${formData.type==='other'?'selected':''} value="other">🏢 Other Business</option> </select> </div> <div class="form-row"> <div class="form-group"><label>City & State *</label><input type="text" id="f_city" placeholder="e.g. Nashville, TN" value="${formData.city||''}"></div> <div class="form-group"><label>Phone Number</label><input type="tel" id="f_phone" placeholder="(555) 000-0000" value="${formData.phone||''}"></div> </div> <div class="form-group"><label>Current Website (if any)</label><input type="url" id="f_website" placeholder="https://" value="${formData.website||''}"></div> <div class="form-nav"> <div></div> <button class="btn-next" onclick="nextStep(1)">Continue →</button> </div> </div>`;
-} else if (formStep === 2) {
-container.innerHTML = ` <div class="form-header"> <div class="form-step-label">Step 2 of 4</div> <div class="form-step-count">Your Services & Hours</div> </div> <div class="form-body"> <div class="form-title">Services & Hours</div> <div class="form-subtitle">This helps us train your AI chatbot to answer customer questions correctly.</div> <div class="form-group"><label>Main Services Offered</label><textarea id="f_services" placeholder="e.g. Cleanings, whitening, crowns, emergency care...">${formData.services||''}</textarea></div> <div class="form-row"> <div class="form-group"><label>Weekday Hours</label><input type="text" id="f_weekday" placeholder="e.g. Mon–Fri 9am–6pm" value="${formData.weekday||''}"></div> <div class="form-group"><label>Weekend Hours</label><input type="text" id="f_weekend" placeholder="e.g. Sat 10am–4pm, Sun Closed" value="${formData.weekend||''}"></div> </div> <div class="form-group"><label>Anything else the chatbot should know?</label><textarea id="f_notes" placeholder="Special offers, parking info, insurance accepted...">${formData.notes||''}</textarea></div> <div class="form-nav"> <button class="btn-back" onclick="prevStep()">← Back</button> <button class="btn-next" onclick="nextStep(2)">Continue →</button> </div> </div>`;
+  if (formStep === 1) {
+    container.innerHTML = `
+      <div class="form-header">
+        <div class="form-step-label">Step 1 of 4</div>
+        <div class="form-step-count">Tell Us About Your Business</div>
+      </div>
+      <div class="form-body">
+        <div class="form-title">Let's Build Your Site</div>
+        <div class="form-subtitle">Tell us about your business — this takes less than 3 minutes.</div>
+        <div class="form-group"><label>Business Name *</label><input type="text" id="f_name" placeholder="e.g. Bright Smiles Dental" value="${formData.name||''}"></div>
+        <div class="form-group"><label>Business Type *</label>
+          <select id="f_type">
+            <option value="">Select...</option>
+            <option ${formData.type==='dental'?'selected':''} value="dental">🦷 Dental Office</option>
+            <option ${formData.type==='hookah'?'selected':''} value="hookah">💨 Hookah Lounge</option>
+            <option ${formData.type==='restaurant'?'selected':''} value="restaurant">🍽️ Restaurant</option>
+            <option ${formData.type==='salon'?'selected':''} value="salon">💇 Salon / Barbershop</option>
+            <option ${formData.type==='gym'?'selected':''} value="gym">🏃 Gym / Fitness</option>
+            <option ${formData.type==='medical'?'selected':''} value="medical">🏥 Medical / Clinic</option>
+            <option ${formData.type==='law'?'selected':''} value="law">⚖️ Law Office</option>
+            <option ${formData.type==='other'?'selected':''} value="other">🏢 Other Business</option>
+          </select>
+        </div>
+        <div class="form-row">
+          <div class="form-group"><label>City & State *</label><input type="text" id="f_city" placeholder="e.g. Nashville, TN" value="${formData.city||''}"></div>
+          <div class="form-group"><label>Phone Number</label><input type="tel" id="f_phone" placeholder="(555) 000-0000" value="${formData.phone||''}"></div>
+        </div>
+        <div class="form-group"><label>Current Website (if any)</label><input type="url" id="f_website" placeholder="https://" value="${formData.website||''}"></div>
+        <div class="form-nav">
+          <div></div>
+          <button class="btn-next" onclick="nextStep(1)">Continue →</button>
+        </div>
+      </div>`;
+  } else if (formStep === 2) {
+    container.innerHTML = `
+      <div class="form-header">
+        <div class="form-step-label">Step 2 of 4</div>
+        <div class="form-step-count">Your Services & Hours</div>
+      </div>
+      <div class="form-body">
+        <div class="form-title">Services & Hours</div>
+        <div class="form-subtitle">This helps us train your AI chatbot to answer customer questions correctly.</div>
+        <div class="form-group"><label>Main Services Offered</label><textarea id="f_services" placeholder="e.g. Cleanings, whitening, crowns, emergency care...">${formData.services||''}</textarea></div>
+
+```
+    <div class="form-row">
+      <div class="form-group"><label>Weekday Hours</label><input type="text" id="f_weekday" placeholder="e.g. Mon–Fri 9am–6pm" value="${formData.weekday||''}"></div>
+      <div class="form-group"><label>Weekend Hours</label><input type="text" id="f_weekend" placeholder="e.g. Sat 10am–4pm, Sun Closed" value="${formData.weekend||''}"></div>
+    </div>
+    <div class="form-group"><label>Anything else the chatbot should know?</label><textarea id="f_notes" placeholder="Special offers, parking info, insurance accepted...">${formData.notes||''}</textarea></div>
+    <div class="form-nav">
+      <button class="btn-back" onclick="prevStep()">← Back</button>
+      <button class="btn-next" onclick="nextStep(2)">Continue →</button>
+    </div>
+  </div>`;
+```
+
 } else if (formStep === 3) {
 container.innerHTML = ` <div class="form-header"> <div class="form-step-label">Step 3 of 4</div> <div class="form-step-count">Pick Your Plan</div> </div> <div class="form-body"> <div class="form-title">Pick Your Plan</div> <div class="form-subtitle">All plans include a custom website + AI chatbot. Cancel anytime.</div> <div class="plan-select-grid"> <div class="plan-option ${formData.plan==='starter'?'selected':''}" onclick="selectPlan('starter',this)"> <div class="plan-option-name">Starter</div> <div class="plan-option-price">$79/mo</div> <div class="plan-option-setup">+$100 setup</div> </div> <div class="plan-option ${(!formData.plan||formData.plan==='standard')?'selected':''}" onclick="selectPlan('standard',this)"> <div class="plan-option-name">⭐ Standard</div> <div class="plan-option-price">$149/mo</div> <div class="plan-option-setup">+$200 setup</div> </div> <div class="plan-option ${formData.plan==='premium'?'selected':''}" onclick="selectPlan('premium',this)"> <div class="plan-option-name">Premium</div> <div class="plan-option-price">$249/mo</div> <div class="plan-option-setup">+$300 setup</div> </div> </div> <div class="form-row"> <div class="form-group"><label>Your Name *</label><input type="text" id="f_contact" placeholder="Your full name" value="${formData.contact||''}"></div> <div class="form-group"><label>Your Email *</label><input type="email" id="f_email" placeholder="you@email.com" value="${formData.email||''}"></div> </div> <div class="form-nav"> <button class="btn-back" onclick="prevStep()">← Back</button> <button class="btn-next" onclick="nextStep(3)">Review My Order →</button> </div> </div>`;
 if (!formData.plan) selectPlanDefault();
