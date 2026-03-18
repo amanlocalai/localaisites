@@ -1,5 +1,4 @@
 <!DOCTYPE html>
-
 <html lang="en">
 <head>
 <meta charset="UTF-8">
@@ -13,1721 +12,636 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
 <style>
-  :root {
-    --bg: #050810;
-    --surface: #0d1120;
-    --surface2: #141929;
-    --border: rgba(255,255,255,0.07);
-    --accent: #00e5ff;
-    --accent2: #7c3aed;
-    --accent3: #f59e0b;
-    --text: #f0f4ff;
-    --muted: #8892a4;
-    --font-display: 'Syne', sans-serif;
-    --font-body: 'DM Sans', sans-serif;
-    --radius: 16px;
-    --glow: 0 0 40px rgba(0,229,255,0.15);
-  }
-
-*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
-html { scroll-behavior: smooth; }
-
-body {
-background: var(–bg);
-color: var(–text);
-font-family: var(–font-body);
-font-size: 16px;
-line-height: 1.6;
-overflow-x: hidden;
-}
-
-/* NOISE OVERLAY */
-body::before {
-content: ‘’;
-position: fixed;
-inset: 0;
-background-image: url(“data:image/svg+xml,%3Csvg viewBox=‘0 0 256 256’ xmlns=‘http://www.w3.org/2000/svg’%3E%3Cfilter id=‘noise’%3E%3CfeTurbulence type=‘fractalNoise’ baseFrequency=‘0.9’ numOctaves=‘4’ stitchTiles=‘stitch’/%3E%3C/filter%3E%3Crect width=‘100%25’ height=‘100%25’ filter=‘url(%23noise)’ opacity=‘0.04’/%3E%3C/svg%3E”);
-pointer-events: none;
-z-index: 9999;
-opacity: 0.4;
-}
-
-/* NAV */
-nav {
-position: fixed;
-top: 0; left: 0; right: 0;
-z-index: 100;
-padding: 0 5%;
-height: 70px;
-display: flex;
-align-items: center;
-justify-content: space-between;
-background: rgba(5,8,16,0.85);
-backdrop-filter: blur(20px);
-border-bottom: 1px solid var(–border);
-}
-
-.nav-logo {
-font-family: var(–font-display);
-font-weight: 800;
-font-size: 1.3rem;
-color: var(–accent);
-letter-spacing: -0.5px;
-text-decoration: none;
-}
-.nav-logo span { color: var(–text); }
-
-.nav-links {
-display: flex;
-align-items: center;
-gap: 2rem;
-list-style: none;
-}
-
-.nav-links a {
-color: var(–muted);
-text-decoration: none;
-font-size: 0.9rem;
-font-weight: 500;
-transition: color 0.2s;
-}
-.nav-links a:hover { color: var(–text); }
-
-.nav-cta {
-background: var(–accent);
-color: #000 !important;
-padding: 0.5rem 1.2rem;
-border-radius: 8px;
-font-weight: 600 !important;
-transition: opacity 0.2s !important;
-}
-.nav-cta:hover { opacity: 0.85; }
-
-.hamburger {
-display: none;
-flex-direction: column;
-gap: 5px;
-cursor: pointer;
-padding: 4px;
-background: none;
-border: none;
-}
-.hamburger span {
-display: block;
-width: 24px;
-height: 2px;
-background: var(–text);
-border-radius: 2px;
-transition: all 0.3s;
-}
-.hamburger.open span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
-.hamburger.open span:nth-child(2) { opacity: 0; }
-.hamburger.open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
-
-.mobile-menu {
-display: none;
-position: fixed;
-top: 70px; left: 0; right: 0;
-background: var(–surface);
-border-bottom: 1px solid var(–border);
-padding: 1.5rem 5%;
-flex-direction: column;
-gap: 1.2rem;
-z-index: 99;
-}
-.mobile-menu.open { display: flex; }
-.mobile-menu a {
-color: var(–text);
-text-decoration: none;
-font-size: 1.1rem;
-font-weight: 500;
-padding: 0.4rem 0;
-border-bottom: 1px solid var(–border);
-}
-.mobile-menu a:last-child { border: none; }
-
-/* HERO */
-.hero {
-min-height: 100vh;
-display: flex;
-align-items: center;
-justify-content: center;
-text-align: center;
-padding: 120px 5% 80px;
-position: relative;
-overflow: hidden;
-}
-
-.hero-bg {
-position: absolute;
-inset: 0;
-background:
-radial-gradient(ellipse 80% 50% at 50% 0%, rgba(0,229,255,0.08) 0%, transparent 60%),
-radial-gradient(ellipse 60% 40% at 80% 80%, rgba(124,58,237,0.07) 0%, transparent 50%);
-}
-
-.hero-grid {
-position: absolute;
-inset: 0;
-background-image:
-linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px),
-linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px);
-background-size: 60px 60px;
-mask-image: radial-gradient(ellipse 80% 80% at 50% 50%, black 0%, transparent 70%);
-}
-
-.hero-badge {
-display: inline-flex;
-align-items: center;
-gap: 0.5rem;
-background: rgba(245,158,11,0.12);
-border: 1px solid rgba(245,158,11,0.3);
-color: var(–accent3);
-padding: 0.4rem 1rem;
-border-radius: 100px;
-font-size: 0.85rem;
-font-weight: 600;
-margin-bottom: 1.5rem;
-animation: fadeDown 0.6s ease both;
-}
-
-.spots-counter {
-display: inline-block;
-background: var(–accent3);
-color: #000;
-padding: 0 0.4rem;
-border-radius: 4px;
-font-weight: 700;
-}
-
-.hero h1 {
-font-family: var(–font-display);
-font-size: clamp(2.8rem, 7vw, 5.5rem);
-font-weight: 800;
-line-height: 1.05;
-letter-spacing: -2px;
-margin-bottom: 1.5rem;
-animation: fadeUp 0.7s 0.1s ease both;
-}
-
-.hero h1 em {
-font-style: normal;
-color: var(–accent);
-position: relative;
-}
-
-.hero p {
-max-width: 560px;
-margin: 0 auto 2.5rem;
-color: var(–muted);
-font-size: 1.1rem;
-animation: fadeUp 0.7s 0.2s ease both;
-}
-
-.hero-btns {
-display: flex;
-gap: 1rem;
-justify-content: center;
-flex-wrap: wrap;
-animation: fadeUp 0.7s 0.3s ease both;
-}
-
-.btn-primary {
-background: var(–accent);
-color: #000;
-padding: 0.85rem 2rem;
-border-radius: 10px;
-font-weight: 700;
-font-size: 1rem;
-text-decoration: none;
-border: none;
-cursor: pointer;
-transition: transform 0.2s, box-shadow 0.2s;
-box-shadow: 0 0 30px rgba(0,229,255,0.3);
-font-family: var(–font-body);
-}
-.btn-primary:hover { transform: translateY(-2px); box-shadow: 0 0 40px rgba(0,229,255,0.5); }
-
-.btn-secondary {
-background: transparent;
-color: var(–text);
-padding: 0.85rem 2rem;
-border-radius: 10px;
-font-weight: 600;
-font-size: 1rem;
-text-decoration: none;
-border: 1px solid var(–border);
-cursor: pointer;
-transition: border-color 0.2s, background 0.2s;
-font-family: var(–font-body);
-}
-.btn-secondary:hover { border-color: rgba(255,255,255,0.2); background: rgba(255,255,255,0.04); }
-
-.hero-stats {
-display: flex;
-justify-content: center;
-gap: 3rem;
-margin-top: 4rem;
-flex-wrap: wrap;
-animation: fadeUp 0.7s 0.4s ease both;
-}
-
-.stat {
-text-align: center;
-}
-.stat-value {
-font-family: var(–font-display);
-font-size: 2rem;
-font-weight: 800;
-color: var(–accent);
-display: block;
-}
-.stat-label {
-font-size: 0.8rem;
-color: var(–muted);
-text-transform: uppercase;
-letter-spacing: 1px;
-}
-
-/* MARQUEE */
-.marquee-wrap {
-overflow: hidden;
-border-top: 1px solid var(–border);
-border-bottom: 1px solid var(–border);
-background: var(–surface);
-padding: 1rem 0;
-}
-
-.marquee-track {
-display: flex;
-gap: 2.5rem;
-width: max-content;
-animation: marquee 25s linear infinite;
-}
-
-.marquee-item {
-display: flex;
-align-items: center;
-gap: 0.6rem;
-white-space: nowrap;
-color: var(–muted);
-font-size: 0.9rem;
-font-weight: 500;
-}
-
-/* SECTIONS */
-section { padding: 100px 5%; }
-
-.section-label {
-display: inline-block;
-font-size: 0.75rem;
-font-weight: 700;
-letter-spacing: 3px;
-text-transform: uppercase;
-color: var(–accent);
-margin-bottom: 1rem;
-}
-
-.section-title {
-font-family: var(–font-display);
-font-size: clamp(2rem, 4vw, 3rem);
-font-weight: 800;
-letter-spacing: -1px;
-line-height: 1.1;
-margin-bottom: 1rem;
-}
-
-.section-sub {
-color: var(–muted);
-max-width: 520px;
-margin-bottom: 3.5rem;
-}
-
-/* HOW IT WORKS */
-.steps-grid {
-display: grid;
-grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-gap: 1.5rem;
-counter-reset: steps;
-}
-
-.step-card {
-background: var(–surface);
-border: 1px solid var(–border);
-border-radius: var(–radius);
-padding: 2rem;
-position: relative;
-transition: border-color 0.3s, transform 0.3s;
-counter-increment: steps;
-}
-.step-card:hover { border-color: rgba(0,229,255,0.2); transform: translateY(-4px); }
-
-.step-number {
-font-family: var(–font-display);
-font-size: 3.5rem;
-font-weight: 800;
-color: rgba(0,229,255,0.08);
-line-height: 1;
-margin-bottom: 0.5rem;
-}
-
-.step-icon {
-font-size: 2rem;
-margin-bottom: 1rem;
-}
-
-.step-card h3 {
-font-family: var(–font-display);
-font-size: 1.1rem;
-font-weight: 700;
-margin-bottom: 0.5rem;
-}
-
-.step-card p { color: var(–muted); font-size: 0.95rem; }
-
-/* INDUSTRIES */
-.industries-grid {
-display: grid;
-grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-gap: 1rem;
-}
-
-.industry-card {
-background: var(–surface);
-border: 1px solid var(–border);
-border-radius: var(–radius);
-padding: 1.5rem;
-text-align: center;
-transition: border-color 0.3s, background 0.3s;
-cursor: default;
-position: relative;
-overflow: hidden;
-}
-.industry-card::before {
-content: ‘’;
-position: absolute;
-inset: 0;
-background: radial-gradient(circle at 50% 0%, rgba(0,229,255,0.06), transparent 60%);
-opacity: 0;
-transition: opacity 0.3s;
-}
-.industry-card:hover { border-color: rgba(0,229,255,0.25); }
-.industry-card:hover::before { opacity: 1; }
-
-.industry-emoji { font-size: 2rem; display: block; margin-bottom: 0.6rem; }
-.industry-name { font-weight: 600; font-size: 0.95rem; }
-
-.industry-badge {
-font-size: 0.65rem;
-padding: 0.2rem 0.5rem;
-border-radius: 100px;
-font-weight: 700;
-margin-top: 0.4rem;
-display: inline-block;
-}
-.badge-popular { background: rgba(0,229,255,0.15); color: var(–accent); }
-.badge-hot { background: rgba(239,68,68,0.15); color: #f87171; }
-.badge-growing { background: rgba(34,197,94,0.15); color: #4ade80; }
-
-/* TESTIMONIALS */
-.testimonials-grid {
-display: grid;
-grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-gap: 1.5rem;
-}
-
-.testimonial-card {
-background: var(–surface);
-border: 1px solid var(–border);
-border-radius: var(–radius);
-padding: 2rem;
-position: relative;
-}
-
-.testimonial-quote {
-font-size: 3rem;
-color: var(–accent);
-line-height: 0.5;
-margin-bottom: 1rem;
-opacity: 0.4;
-font-family: serif;
-}
-
-.testimonial-text {
-color: var(–muted);
-font-size: 0.95rem;
-line-height: 1.7;
-margin-bottom: 1.5rem;
-}
-
-.testimonial-author {
-display: flex;
-align-items: center;
-gap: 0.8rem;
-}
-
-.author-avatar {
-width: 42px;
-height: 42px;
-border-radius: 50%;
-background: linear-gradient(135deg, var(–accent2), var(–accent));
-display: flex;
-align-items: center;
-justify-content: center;
-font-weight: 700;
-font-size: 0.9rem;
-color: white;
-flex-shrink: 0;
-}
-
-.author-name { font-weight: 600; font-size: 0.9rem; }
-.author-biz { color: var(–muted); font-size: 0.8rem; }
-
-.stars { color: var(–accent3); font-size: 0.8rem; margin-bottom: 0.2rem; }
-
-/* PRICING */
-.pricing-grid {
-display: grid;
-grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-gap: 1.5rem;
-align-items: start;
-}
-
-.price-card {
-background: var(–surface);
-border: 1px solid var(–border);
-border-radius: var(–radius);
-padding: 2rem;
-transition: transform 0.3s, border-color 0.3s;
-}
-.price-card:hover { transform: translateY(-4px); }
-
-.price-card.featured {
-border-color: var(–accent);
-box-shadow: 0 0 40px rgba(0,229,255,0.1);
-position: relative;
-}
-
-.featured-badge {
-position: absolute;
-top: -13px;
-left: 50%;
-transform: translateX(-50%);
-background: var(–accent);
-color: #000;
-font-size: 0.7rem;
-font-weight: 800;
-letter-spacing: 1px;
-text-transform: uppercase;
-padding: 0.3rem 0.9rem;
-border-radius: 100px;
-white-space: nowrap;
-}
-
-.price-tier {
-font-size: 0.8rem;
-font-weight: 700;
-letter-spacing: 2px;
-text-transform: uppercase;
-color: var(–muted);
-margin-bottom: 0.5rem;
-}
-
-.price-amount {
-font-family: var(–font-display);
-font-size: 3rem;
-font-weight: 800;
-line-height: 1;
-margin-bottom: 0.25rem;
-}
-
-.price-amount sup { font-size: 1.2rem; vertical-align: super; }
-
-.price-setup {
-color: var(–muted);
-font-size: 0.85rem;
-margin-bottom: 1.5rem;
-padding-bottom: 1.5rem;
-border-bottom: 1px solid var(–border);
-}
-
-.price-features { list-style: none; margin-bottom: 2rem; }
-.price-features li {
-display: flex;
-align-items: flex-start;
-gap: 0.6rem;
-padding: 0.4rem 0;
-font-size: 0.9rem;
-color: var(–muted);
-}
-.price-features li::before { content: ‘✓’; color: var(–accent); font-weight: 700; flex-shrink: 0; }
-
-/* CALCULATOR */
-.calc-wrap {
-background: var(–surface);
-border: 1px solid var(–border);
-border-radius: var(–radius);
-padding: 2.5rem;
-max-width: 700px;
-margin: 0 auto;
-}
-
-.calc-row {
-display: grid;
-grid-template-columns: 1fr 1fr;
-gap: 2rem;
-margin-bottom: 2rem;
-}
-
-.calc-label {
-font-size: 0.85rem;
-font-weight: 600;
-color: var(–muted);
-margin-bottom: 0.8rem;
-text-transform: uppercase;
-letter-spacing: 1px;
-}
-
-.slider-wrap { position: relative; }
-
-input[type=range] {
-width: 100%;
-height: 4px;
-border-radius: 2px;
-background: var(–surface2);
-outline: none;
--webkit-appearance: none;
-cursor: pointer;
-margin-bottom: 0.5rem;
-}
-input[type=range]::-webkit-slider-thumb {
--webkit-appearance: none;
-width: 18px;
-height: 18px;
-border-radius: 50%;
-background: var(–accent);
-cursor: pointer;
-box-shadow: 0 0 12px rgba(0,229,255,0.5);
-}
-
-.range-display {
-font-family: var(–font-display);
-font-size: 1.6rem;
-font-weight: 800;
-color: var(–text);
-}
-
-.plan-selector {
-display: flex;
-gap: 0.5rem;
-flex-wrap: wrap;
-}
-.plan-btn {
-padding: 0.5rem 1rem;
-border-radius: 8px;
-border: 1px solid var(–border);
-background: transparent;
-color: var(–muted);
-cursor: pointer;
-font-family: var(–font-body);
-font-size: 0.85rem;
-font-weight: 500;
-transition: all 0.2s;
-}
-.plan-btn.active {
-background: var(–accent);
-border-color: var(–accent);
-color: #000;
-font-weight: 700;
-}
-
-.calc-result {
-background: var(–bg);
-border: 1px solid rgba(0,229,255,0.2);
-border-radius: 12px;
-padding: 2rem;
-text-align: center;
-}
-
-.calc-result-label { color: var(–muted); font-size: 0.85rem; margin-bottom: 0.3rem; }
-.calc-result-value {
-font-family: var(–font-display);
-font-size: 3rem;
-font-weight: 800;
-color: var(–accent);
-line-height: 1;
-margin-bottom: 0.5rem;
-transition: all 0.3s;
-}
-.calc-result-sub { color: var(–muted); font-size: 0.85rem; }
-.calc-result-annual { color: var(–accent3); font-weight: 600; font-size: 0.9rem; margin-top: 0.3rem; }
-
-/* FORM */
-.form-section {
-background: var(–surface);
-border-radius: var(–radius);
-border: 1px solid var(–border);
-max-width: 650px;
-margin: 0 auto;
-overflow: hidden;
-}
-
-.form-progress {
-height: 3px;
-background: var(–surface2);
-position: relative;
-}
-.form-progress-bar {
-height: 100%;
-background: linear-gradient(90deg, var(–accent2), var(–accent));
-transition: width 0.4s ease;
-border-radius: 0 2px 2px 0;
-}
-
-.form-header {
-padding: 2rem 2rem 0;
-display: flex;
-align-items: center;
-justify-content: space-between;
-}
-
-.form-step-label {
-font-size: 0.75rem;
-font-weight: 700;
-text-transform: uppercase;
-letter-spacing: 2px;
-color: var(–accent);
-}
-
-.form-step-count { color: var(–muted); font-size: 0.85rem; }
-
-.form-body { padding: 1.5rem 2rem 2rem; }
-
-.form-title {
-font-family: var(–font-display);
-font-size: 1.5rem;
-font-weight: 700;
-margin-bottom: 0.3rem;
-}
-.form-subtitle { color: var(–muted); font-size: 0.9rem; margin-bottom: 1.8rem; }
-
-.form-group { margin-bottom: 1.2rem; }
-
-.form-group label {
-display: block;
-font-size: 0.85rem;
-font-weight: 600;
-color: var(–muted);
-margin-bottom: 0.4rem;
-}
-
-.form-group input,
-.form-group select,
-.form-group textarea {
-width: 100%;
-background: var(–bg);
-border: 1px solid var(–border);
-border-radius: 10px;
-padding: 0.75rem 1rem;
-color: var(–text);
-font-family: var(–font-body);
-font-size: 0.95rem;
-outline: none;
-transition: border-color 0.2s;
--webkit-appearance: none;
-}
-
-.form-group input:focus,
-.form-group select:focus,
-.form-group textarea:focus { border-color: var(–accent); }
-
-.form-group textarea { resize: vertical; min-height: 90px; }
-
-.form-group select option { background: var(–surface); }
-
-.form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
-
-.form-nav {
-display: flex;
-justify-content: space-between;
-align-items: center;
-margin-top: 1.5rem;
-}
-
-.btn-back {
-background: none;
-border: 1px solid var(–border);
-color: var(–muted);
-padding: 0.7rem 1.2rem;
-border-radius: 8px;
-cursor: pointer;
-font-family: var(–font-body);
-transition: all 0.2s;
-}
-.btn-back:hover { border-color: rgba(255,255,255,0.2); color: var(–text); }
-
-.btn-next {
-background: var(–accent);
-border: none;
-color: #000;
-padding: 0.7rem 1.5rem;
-border-radius: 8px;
-cursor: pointer;
-font-family: var(–font-body);
-font-weight: 700;
-transition: all 0.2s;
-}
-.btn-next:hover { opacity: 0.85; }
-
-.plan-select-grid {
-display: grid;
-grid-template-columns: repeat(3, 1fr);
-gap: 0.8rem;
-margin-bottom: 1.5rem;
-}
-
-.plan-option {
-border: 1px solid var(–border);
-border-radius: 10px;
-padding: 1rem;
-text-align: center;
-cursor: pointer;
-transition: all 0.2s;
-}
-.plan-option:hover { border-color: rgba(0,229,255,0.3); }
-.plan-option.selected { border-color: var(–accent); background: rgba(0,229,255,0.05); }
-
-.plan-option-name { font-weight: 700; font-size: 0.9rem; margin-bottom: 0.3rem; }
-.plan-option-price { color: var(–accent); font-weight: 600; font-size: 0.85rem; }
-.plan-option-setup { color: var(–muted); font-size: 0.75rem; }
-
-/* SUCCESS */
-.success-state {
-text-align: center;
-padding: 3rem 2rem;
-}
-
-.success-icon {
-width: 64px;
-height: 64px;
-background: rgba(0,229,255,0.1);
-border: 2px solid var(–accent);
-border-radius: 50%;
-display: flex;
-align-items: center;
-justify-content: center;
-margin: 0 auto 1.5rem;
-font-size: 1.8rem;
-animation: scaleIn 0.5s ease;
-}
-
-.success-title {
-font-family: var(–font-display);
-font-size: 1.8rem;
-font-weight: 800;
-margin-bottom: 0.5rem;
-}
-
-.success-text { color: var(–muted); margin-bottom: 2rem; }
-
-.success-info {
-background: var(–bg);
-border: 1px solid var(–border);
-border-radius: 10px;
-padding: 1.2rem;
-font-size: 0.9rem;
-line-height: 1.8;
-}
-
-/* CONTACT */
-.contact-grid {
-display: grid;
-grid-template-columns: 1fr 1fr;
-gap: 3rem;
-align-items: start;
-}
-
-.contact-item {
-display: flex;
-gap: 1rem;
-align-items: flex-start;
-padding: 1.2rem;
-background: var(–surface);
-border: 1px solid var(–border);
-border-radius: 12px;
-margin-bottom: 1rem;
-text-decoration: none;
-color: var(–text);
-transition: border-color 0.2s;
-}
-.contact-item:hover { border-color: rgba(0,229,255,0.25); }
-
-.contact-icon {
-width: 42px;
-height: 42px;
-border-radius: 10px;
-background: rgba(0,229,255,0.08);
-display: flex;
-align-items: center;
-justify-content: center;
-font-size: 1.2rem;
-flex-shrink: 0;
-}
-
-.contact-label { font-size: 0.75rem; color: var(–muted); margin-bottom: 0.2rem; }
-.contact-value { font-weight: 600; }
-
-/* FOOTER */
-footer {
-border-top: 1px solid var(–border);
-padding: 2rem 5%;
-display: flex;
-justify-content: space-between;
-align-items: center;
-flex-wrap: wrap;
-gap: 1rem;
-}
-
-.footer-logo {
-font-family: var(–font-display);
-font-weight: 800;
-color: var(–accent);
-font-size: 1.1rem;
-}
-
-.footer-text { color: var(–muted); font-size: 0.85rem; }
-
-/* ADMIN */
-.admin-modal {
-display: none;
-position: fixed;
-inset: 0;
-background: rgba(0,0,0,0.8);
-backdrop-filter: blur(8px);
-z-index: 200;
-align-items: center;
-justify-content: center;
-padding: 1rem;
-}
-.admin-modal.open { display: flex; }
-
-.admin-box {
-background: var(–surface);
-border: 1px solid var(–border);
-border-radius: var(–radius);
-padding: 2rem;
-width: 100%;
-max-width: 420px;
-}
-
-.admin-title {
-font-family: var(–font-display);
-font-size: 1.3rem;
-font-weight: 700;
-margin-bottom: 0.5rem;
-}
-.admin-sub { color: var(–muted); font-size: 0.85rem; margin-bottom: 1.5rem; }
-
-.admin-input {
-width: 100%;
-background: var(–bg);
-border: 1px solid var(–border);
-border-radius: 8px;
-padding: 0.75rem 1rem;
-color: var(–text);
-font-family: var(–font-body);
-font-size: 0.95rem;
-outline: none;
-margin-bottom: 1rem;
-transition: border-color 0.2s;
-}
-.admin-input:focus { border-color: var(–accent); }
-
-.admin-error {
-color: #f87171;
-font-size: 0.85rem;
-margin-bottom: 0.8rem;
-display: none;
-}
-
-.admin-btns { display: flex; gap: 0.8rem; }
-
-/* DASHBOARD */
-.dashboard-modal {
-display: none;
-position: fixed;
-inset: 0;
-background: var(–bg);
-z-index: 200;
-overflow-y: auto;
-padding: 2rem 5%;
-}
-.dashboard-modal.open { display: block; }
-
-.dash-header {
-display: flex;
-align-items: center;
-justify-content: space-between;
-margin-bottom: 2rem;
-padding-bottom: 1rem;
-border-bottom: 1px solid var(–border);
-}
-
-.dash-title {
-font-family: var(–font-display);
-font-size: 1.5rem;
-font-weight: 800;
-}
-
-.dash-stats {
-display: grid;
-grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-gap: 1rem;
-margin-bottom: 2rem;
-}
-
-.dash-stat {
-background: var(–surface);
-border: 1px solid var(–border);
-border-radius: 12px;
-padding: 1.5rem;
-}
-
-.dash-stat-label { color: var(–muted); font-size: 0.8rem; margin-bottom: 0.3rem; }
-.dash-stat-value {
-font-family: var(–font-display);
-font-size: 2rem;
-font-weight: 800;
-color: var(–accent);
-}
-
-.dash-section { margin-bottom: 2rem; }
-.dash-section-title {
-font-family: var(–font-display);
-font-size: 1rem;
-font-weight: 700;
-margin-bottom: 1rem;
-color: var(–muted);
-text-transform: uppercase;
-letter-spacing: 1px;
-}
-
-.dash-table {
-width: 100%;
-border-collapse: collapse;
-background: var(–surface);
-border-radius: 12px;
-overflow: hidden;
-}
-.dash-table th {
-text-align: left;
-padding: 0.8rem 1rem;
-font-size: 0.75rem;
-text-transform: uppercase;
-letter-spacing: 1px;
-color: var(–muted);
-border-bottom: 1px solid var(–border);
-}
-.dash-table td {
-padding: 0.8rem 1rem;
-font-size: 0.9rem;
-border-bottom: 1px solid var(–border);
-}
-.dash-table tr:last-child td { border: none; }
-
-/* ANIMATIONS */
-@keyframes fadeUp {
-from { opacity: 0; transform: translateY(20px); }
-to { opacity: 1; transform: translateY(0); }
-}
-
-@keyframes fadeDown {
-from { opacity: 0; transform: translateY(-10px); }
-to { opacity: 1; transform: translateY(0); }
-}
-
-@keyframes marquee {
-from { transform: translateX(0); }
-to { transform: translateX(-50%); }
-}
-
-@keyframes scaleIn {
-from { opacity: 0; transform: scale(0.5); }
-to { opacity: 1; transform: scale(1); }
-}
-
-/* RESPONSIVE */
-@media (max-width: 768px) {
-.nav-links { display: none; }
-.hamburger { display: flex; }
-.hero-stats { gap: 1.5rem; }
-.calc-row { grid-template-columns: 1fr; gap: 1.5rem; }
-.contact-grid { grid-template-columns: 1fr; }
-.form-row { grid-template-columns: 1fr; }
-.plan-select-grid { grid-template-columns: 1fr; }
-footer { flex-direction: column; text-align: center; }
-.dash-header { flex-direction: column; gap: 1rem; align-items: flex-start; }
-}
-
-@media (max-width: 480px) {
-.hero h1 { letter-spacing: -1px; }
-.form-body { padding: 1.2rem; }
-.form-header { padding: 1.2rem 1.2rem 0; }
-.calc-wrap { padding: 1.5rem; }
-}
-
-/* SCROLL REVEAL */
-.reveal {
-opacity: 0;
-transform: translateY(30px);
-transition: opacity 0.6s ease, transform 0.6s ease;
-}
-.reveal.visible { opacity: 1; transform: translateY(0); }
+:root {
+--bg: #050810;
+--surface: #0d1120;
+--surface2: #141929;
+--border: rgba(255,255,255,0.07);
+--accent: #00e5ff;
+--accent2: #7c3aed;
+--accent3: #f59e0b;
+--text: #f0f4ff;
+--muted: #8892a4;
+--font-display: 'Syne', sans-serif;
+--font-body: 'DM Sans', sans-serif;
+--radius: 16px;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;}
+body{background:var(--bg);color:var(--text);font-family:var(--font-body);font-size:16px;line-height:1.6;overflow-x:hidden;}
+nav{position:fixed;top:0;left:0;right:0;z-index:100;padding:0 5%;height:70px;display:flex;align-items:center;justify-content:space-between;background:rgba(5,8,16,0.85);backdrop-filter:blur(20px);border-bottom:1px solid var(--border);}
+.nav-logo{font-family:var(--font-display);font-weight:800;font-size:1.3rem;color:var(--accent);letter-spacing:-0.5px;text-decoration:none;}
+.nav-logo span{color:var(--text);}
+.nav-links{display:flex;align-items:center;gap:2rem;list-style:none;}
+.nav-links a{color:var(--muted);text-decoration:none;font-size:0.9rem;font-weight:500;transition:color 0.2s;}
+.nav-links a:hover{color:var(--text);}
+.nav-cta{background:var(--accent);color:#000!important;padding:0.5rem 1.2rem;border-radius:8px;font-weight:600!important;}
+.hamburger{display:none;flex-direction:column;gap:5px;cursor:pointer;padding:4px;background:none;border:none;}
+.hamburger span{display:block;width:24px;height:2px;background:var(--text);border-radius:2px;transition:all 0.3s;}
+.hamburger.open span:nth-child(1){transform:translateY(7px) rotate(45deg);}
+.hamburger.open span:nth-child(2){opacity:0;}
+.hamburger.open span:nth-child(3){transform:translateY(-7px) rotate(-45deg);}
+.mobile-menu{display:none;position:fixed;top:70px;left:0;right:0;background:var(--surface);border-bottom:1px solid var(--border);padding:1.5rem 5%;flex-direction:column;gap:1.2rem;z-index:99;}
+.mobile-menu.open{display:flex;}
+.mobile-menu a{color:var(--text);text-decoration:none;font-size:1.1rem;font-weight:500;padding:0.4rem 0;border-bottom:1px solid var(--border);}
+.mobile-menu a:last-child{border:none;}
+.hero{min-height:100vh;display:flex;align-items:center;justify-content:center;text-align:center;padding:120px 5% 80px;position:relative;overflow:hidden;}
+.hero-bg{position:absolute;inset:0;background:radial-gradient(ellipse 80% 50% at 50% 0%,rgba(0,229,255,0.08) 0%,transparent 60%),radial-gradient(ellipse 60% 40% at 80% 80%,rgba(124,58,237,0.07) 0%,transparent 50%);}
+.hero-grid{position:absolute;inset:0;background-image:linear-gradient(rgba(255,255,255,0.03) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,0.03) 1px,transparent 1px);background-size:60px 60px;}
+.hero-badge{display:inline-flex;align-items:center;gap:0.5rem;background:rgba(245,158,11,0.12);border:1px solid rgba(245,158,11,0.3);color:var(--accent3);padding:0.4rem 1rem;border-radius:100px;font-size:0.85rem;font-weight:600;margin-bottom:1.5rem;}
+.spots-counter{display:inline-block;background:var(--accent3);color:#000;padding:0 0.4rem;border-radius:4px;font-weight:700;}
+.hero h1{font-family:var(--font-display);font-size:clamp(2.8rem,7vw,5.5rem);font-weight:800;line-height:1.05;letter-spacing:-2px;margin-bottom:1.5rem;}
+.hero h1 em{font-style:normal;color:var(--accent);}
+.hero p{max-width:560px;margin:0 auto 2.5rem;color:var(--muted);font-size:1.1rem;}
+.hero-btns{display:flex;gap:1rem;justify-content:center;flex-wrap:wrap;}
+.btn-primary{background:var(--accent);color:#000;padding:0.85rem 2rem;border-radius:10px;font-weight:700;font-size:1rem;text-decoration:none;border:none;cursor:pointer;box-shadow:0 0 30px rgba(0,229,255,0.3);font-family:var(--font-body);}
+.btn-secondary{background:transparent;color:var(--text);padding:0.85rem 2rem;border-radius:10px;font-weight:600;font-size:1rem;text-decoration:none;border:1px solid var(--border);cursor:pointer;font-family:var(--font-body);}
+.hero-stats{display:flex;justify-content:center;gap:3rem;margin-top:4rem;flex-wrap:wrap;}
+.stat{text-align:center;}
+.stat-value{font-family:var(--font-display);font-size:2rem;font-weight:800;color:var(--accent);display:block;}
+.stat-label{font-size:0.8rem;color:var(--muted);text-transform:uppercase;letter-spacing:1px;}
+.marquee-wrap{overflow:hidden;border-top:1px solid var(--border);border-bottom:1px solid var(--border);background:var(--surface);padding:1rem 0;}
+.marquee-track{display:flex;gap:2.5rem;width:max-content;animation:marquee 25s linear infinite;}
+.marquee-item{display:flex;align-items:center;gap:0.6rem;white-space:nowrap;color:var(--muted);font-size:0.9rem;font-weight:500;}
+section{padding:100px 5%;}
+.section-label{display:inline-block;font-size:0.75rem;font-weight:700;letter-spacing:3px;text-transform:uppercase;color:var(--accent);margin-bottom:1rem;}
+.section-title{font-family:var(--font-display);font-size:clamp(2rem,4vw,3rem);font-weight:800;letter-spacing:-1px;line-height:1.1;margin-bottom:1rem;}
+.section-sub{color:var(--muted);max-width:520px;margin-bottom:3.5rem;}
+.steps-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:1.5rem;}
+.step-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:2rem;transition:border-color 0.3s,transform 0.3s;}
+.step-card:hover{border-color:rgba(0,229,255,0.2);transform:translateY(-4px);}
+.step-number{font-family:var(--font-display);font-size:3.5rem;font-weight:800;color:rgba(0,229,255,0.08);line-height:1;margin-bottom:0.5rem;}
+.step-icon{font-size:2rem;margin-bottom:1rem;}
+.step-card h3{font-family:var(--font-display);font-size:1.1rem;font-weight:700;margin-bottom:0.5rem;}
+.step-card p{color:var(--muted);font-size:0.95rem;}
+.industries-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:1rem;}
+.industry-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:1.5rem;text-align:center;transition:border-color 0.3s;}
+.industry-card:hover{border-color:rgba(0,229,255,0.25);}
+.industry-emoji{font-size:2rem;display:block;margin-bottom:0.6rem;}
+.industry-name{font-weight:600;font-size:0.95rem;}
+.industry-badge{font-size:0.65rem;padding:0.2rem 0.5rem;border-radius:100px;font-weight:700;margin-top:0.4rem;display:inline-block;}
+.badge-popular{background:rgba(0,229,255,0.15);color:var(--accent);}
+.badge-hot{background:rgba(239,68,68,0.15);color:#f87171;}
+.badge-growing{background:rgba(34,197,94,0.15);color:#4ade80;}
+.testimonials-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:1.5rem;}
+.testimonial-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:2rem;}
+.testimonial-quote{font-size:3rem;color:var(--accent);line-height:0.5;margin-bottom:1rem;opacity:0.4;font-family:serif;}
+.testimonial-text{color:var(--muted);font-size:0.95rem;line-height:1.7;margin-bottom:1.5rem;}
+.testimonial-author{display:flex;align-items:center;gap:0.8rem;}
+.author-avatar{width:42px;height:42px;border-radius:50%;background:linear-gradient(135deg,var(--accent2),var(--accent));display:flex;align-items:center;justify-content:center;font-weight:700;font-size:0.9rem;color:white;flex-shrink:0;}
+.author-name{font-weight:600;font-size:0.9rem;}
+.author-biz{color:var(--muted);font-size:0.8rem;}
+.stars{color:var(--accent3);font-size:0.8rem;margin-bottom:0.2rem;}
+.pricing-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:1.5rem;align-items:start;}
+.price-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:2rem;transition:transform 0.3s;}
+.price-card:hover{transform:translateY(-4px);}
+.price-card.featured{border-color:var(--accent);box-shadow:0 0 40px rgba(0,229,255,0.1);position:relative;}
+.featured-badge{position:absolute;top:-13px;left:50%;transform:translateX(-50%);background:var(--accent);color:#000;font-size:0.7rem;font-weight:800;letter-spacing:1px;text-transform:uppercase;padding:0.3rem 0.9rem;border-radius:100px;white-space:nowrap;}
+.price-tier{font-size:0.8rem;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--muted);margin-bottom:0.5rem;}
+.price-amount{font-family:var(--font-display);font-size:3rem;font-weight:800;line-height:1;margin-bottom:0.25rem;}
+.price-amount sup{font-size:1.2rem;vertical-align:super;}
+.price-setup{color:var(--muted);font-size:0.85rem;margin-bottom:1.5rem;padding-bottom:1.5rem;border-bottom:1px solid var(--border);}
+.price-features{list-style:none;margin-bottom:2rem;}
+.price-features li{display:flex;align-items:flex-start;gap:0.6rem;padding:0.4rem 0;font-size:0.9rem;color:var(--muted);}
+.price-features li::before{content:'✓';color:var(--accent);font-weight:700;flex-shrink:0;}
+.calc-wrap{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:2.5rem;max-width:700px;margin:0 auto;}
+.calc-row{display:grid;grid-template-columns:1fr 1fr;gap:2rem;margin-bottom:2rem;}
+.calc-label{font-size:0.85rem;font-weight:600;color:var(--muted);margin-bottom:0.8rem;text-transform:uppercase;letter-spacing:1px;}
+input[type=range]{width:100%;height:4px;border-radius:2px;background:var(--surface2);outline:none;-webkit-appearance:none;cursor:pointer;margin-bottom:0.5rem;}
+input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:18px;height:18px;border-radius:50%;background:var(--accent);cursor:pointer;}
+.range-display{font-family:var(--font-display);font-size:1.6rem;font-weight:800;color:var(--text);}
+.plan-selector{display:flex;gap:0.5rem;flex-wrap:wrap;}
+.plan-btn{padding:0.5rem 1rem;border-radius:8px;border:1px solid var(--border);background:transparent;color:var(--muted);cursor:pointer;font-family:var(--font-body);font-size:0.85rem;font-weight:500;}
+.plan-btn.active{background:var(--accent);border-color:var(--accent);color:#000;font-weight:700;}
+.calc-result{background:var(--bg);border:1px solid rgba(0,229,255,0.2);border-radius:12px;padding:2rem;text-align:center;}
+.calc-result-label{color:var(--muted);font-size:0.85rem;margin-bottom:0.3rem;}
+.calc-result-value{font-family:var(--font-display);font-size:3rem;font-weight:800;color:var(--accent);line-height:1;margin-bottom:0.5rem;}
+.calc-result-sub{color:var(--muted);font-size:0.85rem;}
+.calc-result-annual{color:var(--accent3);font-weight:600;font-size:0.9rem;margin-top:0.3rem;}
+.form-section{background:var(--surface);border-radius:var(--radius);border:1px solid var(--border);max-width:650px;margin:0 auto;overflow:hidden;}
+.form-progress{height:3px;background:var(--surface2);}
+.form-progress-bar{height:100%;background:linear-gradient(90deg,var(--accent2),var(--accent));transition:width 0.4s ease;border-radius:0 2px 2px 0;}
+.form-header{padding:2rem 2rem 0;display:flex;align-items:center;justify-content:space-between;}
+.form-step-label{font-size:0.75rem;font-weight:700;text-transform:uppercase;letter-spacing:2px;color:var(--accent);}
+.form-step-count{color:var(--muted);font-size:0.85rem;}
+.form-body{padding:1.5rem 2rem 2rem;}
+.form-title{font-family:var(--font-display);font-size:1.5rem;font-weight:700;margin-bottom:0.3rem;}
+.form-subtitle{color:var(--muted);font-size:0.9rem;margin-bottom:1.8rem;}
+.form-group{margin-bottom:1.2rem;}
+.form-group label{display:block;font-size:0.85rem;font-weight:600;color:var(--muted);margin-bottom:0.4rem;}
+.form-group input,.form-group select,.form-group textarea{width:100%;background:var(--bg);border:1px solid var(--border);border-radius:10px;padding:0.75rem 1rem;color:var(--text);font-family:var(--font-body);font-size:0.95rem;outline:none;-webkit-appearance:none;}
+.form-group input:focus,.form-group select:focus,.form-group textarea:focus{border:1px solid var(--accent);}
+.form-group textarea{resize:vertical;min-height:90px;}
+.form-group select option{background:var(--surface);}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:1rem;}
+.form-nav{display:flex;justify-content:space-between;align-items:center;margin-top:1.5rem;}
+.btn-back{background:none;border:1px solid var(--border);color:var(--muted);padding:0.7rem 1.2rem;border-radius:8px;cursor:pointer;font-family:var(--font-body);}
+.btn-next{background:var(--accent);border:none;color:#000;padding:0.7rem 1.5rem;border-radius:8px;cursor:pointer;font-family:var(--font-body);font-weight:700;}
+.plan-select-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:0.8rem;margin-bottom:1.5rem;}
+.plan-option{border:1px solid var(--border);border-radius:10px;padding:1rem;text-align:center;cursor:pointer;}
+.plan-option.selected{border-color:var(--accent);background:rgba(0,229,255,0.05);}
+.plan-option-name{font-weight:700;font-size:0.9rem;margin-bottom:0.3rem;}
+.plan-option-price{color:var(--accent);font-weight:600;font-size:0.85rem;}
+.plan-option-setup{color:var(--muted);font-size:0.75rem;}
+.success-state{text-align:center;padding:3rem 2rem;}
+.success-icon{width:64px;height:64px;background:rgba(0,229,255,0.1);border:2px solid var(--accent);border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 1.5rem;font-size:1.8rem;}
+.success-title{font-family:var(--font-display);font-size:1.8rem;font-weight:800;margin-bottom:0.5rem;}
+.success-text{color:var(--muted);margin-bottom:2rem;}
+.success-info{background:var(--bg);border:1px solid var(--border);border-radius:10px;padding:1.2rem;font-size:0.9rem;line-height:1.8;}
+.contact-grid{display:grid;grid-template-columns:1fr 1fr;gap:3rem;align-items:start;}
+.contact-item{display:flex;gap:1rem;align-items:flex-start;padding:1.2rem;background:var(--surface);border:1px solid var(--border);border-radius:12px;margin-bottom:1rem;text-decoration:none;color:var(--text);}
+.contact-icon{width:42px;height:42px;border-radius:10px;background:rgba(0,229,255,0.08);display:flex;align-items:center;justify-content:center;font-size:1.2rem;flex-shrink:0;}
+.contact-label{font-size:0.75rem;color:var(--muted);margin-bottom:0.2rem;}
+.contact-value{font-weight:600;}
+footer{border-top:1px solid var(--border);padding:2rem 5%;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:1rem;}
+.footer-logo{font-family:var(--font-display);font-weight:800;color:var(--accent);font-size:1.1rem;}
+.footer-text{color:var(--muted);font-size:0.85rem;}
+.admin-modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.8);backdrop-filter:blur(8px);z-index:200;align-items:center;justify-content:center;padding:1rem;}
+.admin-modal.open{display:flex;}
+.admin-box{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:2rem;width:100%;max-width:420px;}
+.admin-title{font-family:var(--font-display);font-size:1.3rem;font-weight:700;margin-bottom:0.5rem;}
+.admin-sub{color:var(--muted);font-size:0.85rem;margin-bottom:1.5rem;}
+.admin-input{width:100%;background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:0.75rem 1rem;color:var(--text);font-family:var(--font-body);font-size:0.95rem;outline:none;margin-bottom:1rem;}
+.admin-error{color:#f87171;font-size:0.85rem;margin-bottom:0.8rem;display:none;}
+.admin-btns{display:flex;gap:0.8rem;}
+.dashboard-modal{display:none;position:fixed;inset:0;background:var(--bg);z-index:200;overflow-y:auto;padding:2rem 5%;}
+.dashboard-modal.open{display:block;}
+.dash-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:2rem;padding-bottom:1rem;border-bottom:1px solid var(--border);}
+.dash-title{font-family:var(--font-display);font-size:1.5rem;font-weight:800;}
+.dash-stats{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:1rem;margin-bottom:2rem;}
+.dash-stat{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:1.5rem;}
+.dash-stat-label{color:var(--muted);font-size:0.8rem;margin-bottom:0.3rem;}
+.dash-stat-value{font-family:var(--font-display);font-size:2rem;font-weight:800;color:var(--accent);}
+.dash-section{margin-bottom:2rem;}
+.dash-section-title{font-family:var(--font-display);font-size:1rem;font-weight:700;margin-bottom:1rem;color:var(--muted);text-transform:uppercase;letter-spacing:1px;}
+.dash-table{width:100%;border-collapse:collapse;background:var(--surface);border-radius:12px;overflow:hidden;}
+.dash-table th{text-align:left;padding:0.8rem 1rem;font-size:0.75rem;text-transform:uppercase;color:var(--muted);border-bottom:1px solid var(--border);}
+.dash-table td{padding:0.8rem 1rem;font-size:0.9rem;border-bottom:1px solid var(--border);}
+.dash-table tr:last-child td{border:none;}
+@keyframes marquee{from{transform:translateX(0);}to{transform:translateX(-50%);}}
+@keyframes fadeUp{from{opacity:0;transform:translateY(20px);}to{opacity:1;transform:translateY(0);}}
+@keyframes scaleIn{from{opacity:0;transform:scale(0.5);}to{opacity:1;transform:scale(1);}}
+.reveal{opacity:0;transform:translateY(30px);transition:opacity 0.6s ease,transform 0.6s ease;}
+.reveal.visible{opacity:1;transform:translateY(0);}
+@media(max-width:768px){.nav-links{display:none;}.hamburger{display:flex;}.hero-stats{gap:1.5rem;}.calc-row{grid-template-columns:1fr;gap:1.5rem;}.contact-grid{grid-template-columns:1fr;}.form-row{grid-template-columns:1fr;}.plan-select-grid{grid-template-columns:1fr;}footer{flex-direction:column;text-align:center;}.dash-header{flex-direction:column;gap:1rem;align-items:flex-start;}}
+@media(max-width:480px){.form-body{padding:1.2rem;}.form-header{padding:1.2rem 1.2rem 0;}.calc-wrap{padding:1.5rem;}}
 </style>
-
 </head>
 <body>
-
-<!-- NAV -->
-
 <nav>
-  <a onclick="goTo('home')" href="javascript:void(0)" class="nav-logo">LOCAL<span>AI</span></a>
-  <ul class="nav-links">
-    <li><a href="javascript:void(0)" onclick="goTo('how')">How It Works</a></li>
-    <li><a href="javascript:void(0)" onclick="goTo('industries')">Industries</a></li>
-    <li><a href="javascript:void(0)" onclick="goTo('pricing')">Pricing</a></li>
-    <li><a href="javascript:void(0)" onclick="goTo('testimonials')">Reviews</a></li>
-    <li><a href="javascript:void(0)" onclick="openAdmin(event)" style="color:var(--muted);font-size:0.85rem;">Admin ⚙️</a></li>
-    <li><a href="javascript:void(0)" onclick="goTo('start')" class="nav-cta">Get Started →</a></li>
-  </ul>
-  <button class="hamburger" id="hamburger" onclick="toggleMenu()" aria-label="Menu">
-    <span></span><span></span><span></span>
-  </button>
+<a onclick="goTo('home')" href="javascript:void(0)" class="nav-logo">LOCAL<span>AI</span></a>
+<ul class="nav-links">
+<li><a href="javascript:void(0)" onclick="goTo('how')">How It Works</a></li>
+<li><a href="javascript:void(0)" onclick="goTo('industries')">Industries</a></li>
+<li><a href="javascript:void(0)" onclick="goTo('pricing')">Pricing</a></li>
+<li><a href="javascript:void(0)" onclick="goTo('testimonials')">Reviews</a></li>
+<li><a href="javascript:void(0)" onclick="openAdmin(event)" style="color:var(--muted);font-size:0.85rem;">Admin</a></li>
+<li><a href="javascript:void(0)" onclick="goTo('start')" class="nav-cta">Get Started</a></li>
+</ul>
+<button class="hamburger" id="hamburger" onclick="toggleMenu()" aria-label="Menu">
+<span></span><span></span><span></span>
+</button>
 </nav>
-
-<!-- MOBILE MENU -->
-
 <div class="mobile-menu" id="mobileMenu">
-  <a href="javascript:void(0)" onclick="goTo('how')">How It Works</a>
-  <a href="javascript:void(0)" onclick="goTo('industries')">Industries</a>
-  <a href="javascript:void(0)" onclick="goTo('pricing')">Pricing</a>
-  <a href="javascript:void(0)" onclick="goTo('testimonials')">Reviews</a>
-  <a href="javascript:void(0)" onclick="goTo('start')">Get Started →</a>
-  <a href="javascript:void(0)" onclick="openAdmin(event)">Admin ⚙️</a>
+<a href="javascript:void(0)" onclick="goTo('how')">How It Works</a>
+<a href="javascript:void(0)" onclick="goTo('industries')">Industries</a>
+<a href="javascript:void(0)" onclick="goTo('pricing')">Pricing</a>
+<a href="javascript:void(0)" onclick="goTo('testimonials')">Reviews</a>
+<a href="javascript:void(0)" onclick="goTo('start')">Get Started</a>
+<a href="javascript:void(0)" onclick="openAdmin(event)">Admin</a>
 </div>
-
-<!-- HERO -->
-
 <section class="hero" id="home">
-  <div class="hero-bg"></div>
-  <div class="hero-grid"></div>
-  <div style="position:relative;z-index:1;max-width:800px;">
-    <div class="hero-badge">
-      🎉 LIMITED OFFER — First 3 Clients Get 50% OFF Setup · Spots: <span class="spots-counter">3</span> Left
-    </div>
-    <h1>Your Business Deserves a <em>Smart Site</em></h1>
-    <p>We build AI-powered websites with built-in chatbots for local businesses — dental offices, restaurants, salons, hookah lounges — live in under 24 hours.</p>
-    <div class="hero-btns">
-      <a href="javascript:void(0)" onclick="goTo('start')" class="btn-primary">Build My Website →</a>
-      <a href="javascript:void(0)" onclick="goTo('how')" class="btn-secondary">See How It Works</a>
-    </div>
-    <div class="hero-stats">
-      <div class="stat"><span class="stat-value">24H</span><span class="stat-label">Launch Time</span></div>
-      <div class="stat"><span class="stat-value">24/7</span><span class="stat-label">AI Chatbot Active</span></div>
-      <div class="stat"><span class="stat-value">$0</span><span class="stat-label">Tech Skills Needed</span></div>
-      <div class="stat"><span class="stat-value">100%</span><span class="stat-label">Done For You</span></div>
-    </div>
-  </div>
+<div class="hero-bg"></div>
+<div class="hero-grid"></div>
+<div style="position:relative;z-index:1;max-width:800px;">
+<div class="hero-badge">LIMITED OFFER — First 3 Clients Get 50% OFF Setup. Spots: <span class="spots-counter">3</span> Left</div>
+<h1>Your Business Deserves a <em>Smart Site</em></h1>
+<p>We build AI-powered websites with built-in chatbots for local businesses — dental offices, restaurants, salons, hookah lounges — live in under 24 hours.</p>
+<div class="hero-btns">
+<a href="javascript:void(0)" onclick="goTo('start')" class="btn-primary">Build My Website</a>
+<a href="javascript:void(0)" onclick="goTo('how')" class="btn-secondary">See How It Works</a>
+</div>
+<div class="hero-stats">
+<div class="stat"><span class="stat-value">24H</span><span class="stat-label">Launch Time</span></div>
+<div class="stat"><span class="stat-value">24/7</span><span class="stat-label">AI Chatbot Active</span></div>
+<div class="stat"><span class="stat-value">$0</span><span class="stat-label">Tech Skills Needed</span></div>
+<div class="stat"><span class="stat-value">100%</span><span class="stat-label">Done For You</span></div>
+</div>
+</div>
 </section>
-
-<!-- MARQUEE -->
-
 <div class="marquee-wrap">
-  <div class="marquee-track" id="marqueeTrack"></div>
+<div class="marquee-track" id="marqueeTrack"></div>
 </div>
-
-<!-- HOW IT WORKS -->
-
 <section id="how">
-  <div class="section-label">Process</div>
-  <h2 class="section-title">How It Works</h2>
-  <p class="section-sub">From zero to a live, AI-powered website in 3 simple steps. No tech skills needed on your end.</p>
-  <div class="steps-grid reveal">
-    <div class="step-card">
-      <div class="step-number">01</div>
-      <div class="step-icon">📋</div>
-      <h3>Tell Us About Your Business</h3>
-      <p>Fill out our simple form — name, type, hours, phone, services. Takes under 3 minutes.</p>
-    </div>
-    <div class="step-card">
-      <div class="step-number">02</div>
-      <div class="step-icon">⚡</div>
-      <h3>We Build It For You</h3>
-      <p>We create a beautiful, fast website with a custom AI chatbot trained on your business details.</p>
-    </div>
-    <div class="step-card">
-      <div class="step-number">03</div>
-      <div class="step-icon">🚀</div>
-      <h3>Go Live in 24 Hours</h3>
-      <p>Your site goes live. Your chatbot starts handling questions 24/7 so your team focuses on customers.</p>
-    </div>
-    <div class="step-card">
-      <div class="step-number">04</div>
-      <div class="step-icon">🔄</div>
-      <h3>We Maintain Everything</h3>
-      <p>Hours change? New service? We update your site and chatbot every month, included in your plan.</p>
-    </div>
-  </div>
+<div class="section-label">Process</div>
+<h2 class="section-title">How It Works</h2>
+<p class="section-sub">From zero to a live AI-powered website in 4 simple steps. No tech skills needed.</p>
+<div class="steps-grid reveal">
+<div class="step-card"><div class="step-number">01</div><div class="step-icon">📋</div><h3>Tell Us About Your Business</h3><p>Fill out our simple form — name, type, hours, phone, services. Takes under 3 minutes.</p></div>
+<div class="step-card"><div class="step-number">02</div><div class="step-icon">⚡</div><h3>We Build It For You</h3><p>We create a beautiful, fast website with a custom AI chatbot trained on your business details.</p></div>
+<div class="step-card"><div class="step-number">03</div><div class="step-icon">🚀</div><h3>Go Live in 24 Hours</h3><p>Your site goes live. Your chatbot starts handling questions 24/7 so your team focuses on customers.</p></div>
+<div class="step-card"><div class="step-number">04</div><div class="step-icon">🔄</div><h3>We Maintain Everything</h3><p>Hours change? New service? We update your site and chatbot every month, included in your plan.</p></div>
+</div>
 </section>
-
-<!-- INDUSTRIES -->
-
 <section id="industries" style="background:var(--surface);border-top:1px solid var(--border);border-bottom:1px solid var(--border);">
-  <div class="section-label">Industries</div>
-  <h2 class="section-title">Built for Every Local Business</h2>
-  <p class="section-sub">If you have a local business and a phone that won't stop ringing — we can help.</p>
-  <div class="industries-grid reveal">
-    <div class="industry-card"><span class="industry-emoji">🦷</span><div class="industry-name">Dental Offices</div><div class="industry-badge badge-popular">Most Popular</div></div>
-    <div class="industry-card"><span class="industry-emoji">💨</span><div class="industry-name">Hookah Lounges</div><div class="industry-badge badge-hot">High Demand</div></div>
-    <div class="industry-card"><span class="industry-emoji">🍽️</span><div class="industry-name">Restaurants</div><div class="industry-badge badge-growing">Fast Growing</div></div>
-    <div class="industry-card"><span class="industry-emoji">💇</span><div class="industry-name">Salons & Barbershops</div><div class="industry-badge badge-popular">Easy Sell</div></div>
-    <div class="industry-card"><span class="industry-emoji">💅</span><div class="industry-name">Nail Salons</div></div>
-    <div class="industry-card"><span class="industry-emoji">🏃</span><div class="industry-name">Gyms & Fitness</div><div class="industry-badge badge-growing">Growing</div></div>
-    <div class="industry-card"><span class="industry-emoji">🏥</span><div class="industry-name">Med Spas</div></div>
-    <div class="industry-card"><span class="industry-emoji">🦴</span><div class="industry-name">Chiropractors</div></div>
-    <div class="industry-card"><span class="industry-emoji">⚖️</span><div class="industry-name">Law Offices</div><div class="industry-badge badge-popular">Premium</div></div>
-    <div class="industry-card"><span class="industry-emoji">🏢</span><div class="industry-name">Any Local Business</div></div>
-  </div>
+<div class="section-label">Industries</div>
+<h2 class="section-title">Built for Every Local Business</h2>
+<p class="section-sub">If you have a local business and a phone that won't stop ringing — we can help.</p>
+<div class="industries-grid reveal">
+<div class="industry-card"><span class="industry-emoji">🦷</span><div class="industry-name">Dental Offices</div><div class="industry-badge badge-popular">Most Popular</div></div>
+<div class="industry-card"><span class="industry-emoji">💨</span><div class="industry-name">Hookah Lounges</div><div class="industry-badge badge-hot">High Demand</div></div>
+<div class="industry-card"><span class="industry-emoji">🍽️</span><div class="industry-name">Restaurants</div><div class="industry-badge badge-growing">Fast Growing</div></div>
+<div class="industry-card"><span class="industry-emoji">💇</span><div class="industry-name">Salons and Barbershops</div><div class="industry-badge badge-popular">Easy Sell</div></div>
+<div class="industry-card"><span class="industry-emoji">💅</span><div class="industry-name">Nail Salons</div></div>
+<div class="industry-card"><span class="industry-emoji">🏃</span><div class="industry-name">Gyms and Fitness</div><div class="industry-badge badge-growing">Growing</div></div>
+<div class="industry-card"><span class="industry-emoji">🏥</span><div class="industry-name">Med Spas</div></div>
+<div class="industry-card"><span class="industry-emoji">🦴</span><div class="industry-name">Chiropractors</div></div>
+<div class="industry-card"><span class="industry-emoji">⚖️</span><div class="industry-name">Law Offices</div><div class="industry-badge badge-popular">Premium</div></div>
+<div class="industry-card"><span class="industry-emoji">🏢</span><div class="industry-name">Any Local Business</div></div>
+</div>
 </section>
-
-<!-- TESTIMONIALS -->
-
 <section id="testimonials">
-  <div class="section-label">Reviews</div>
-  <h2 class="section-title">What Clients Are Saying</h2>
-  <p class="section-sub">Local businesses across the US trust LocalAI to handle their online presence.</p>
-  <div class="testimonials-grid reveal">
-    <div class="testimonial-card">
-      <div class="testimonial-quote">"</div>
-      <p class="testimonial-text">Aman had our dental office website live in less than 24 hours. The AI chatbot answers patient questions about insurance at 2am so we don't have to. It's paid for itself many times over.</p>
-      <div class="testimonial-author">
-        <div class="author-avatar">DR</div>
-        <div>
-          <div class="stars">★★★★★</div>
-          <div class="author-name">Dr. Rachel Kim</div>
-          <div class="author-biz">Bright Smiles Dental · Nashville, TN</div>
-        </div>
-      </div>
-    </div>
-    <div class="testimonial-card">
-      <div class="testimonial-quote">"</div>
-      <p class="testimonial-text">Our hookah lounge was getting 50 calls a day asking about hours and prices. Now the chatbot handles all of it. We went from overwhelmed to fully booked on weekends.</p>
-      <div class="testimonial-author">
-        <div class="author-avatar">KA</div>
-        <div>
-          <div class="stars">★★★★★</div>
-          <div class="author-name">Khalid Alfarsi</div>
-          <div class="author-biz">Cloud Nine Lounge · Atlanta, GA</div>
-        </div>
-      </div>
-    </div>
-    <div class="testimonial-card">
-      <div class="testimonial-quote">"</div>
-      <p class="testimonial-text">I was skeptical at first but the setup was so fast and easy. My salon now books appointments through the site at all hours. Best $149/month I've ever spent on marketing.</p>
-      <div class="testimonial-author">
-        <div class="author-avatar">MJ</div>
-        <div>
-          <div class="stars">★★★★★</div>
-          <div class="author-name">Maria Johnson</div>
-          <div class="author-biz">Luxe Hair Studio · Austin, TX</div>
-        </div>
-      </div>
-    </div>
-  </div>
+<div class="section-label">Reviews</div>
+<h2 class="section-title">What Clients Are Saying</h2>
+<p class="section-sub">Local businesses across the US trust LocalAI to handle their online presence.</p>
+<div class="testimonials-grid reveal">
+<div class="testimonial-card">
+<div class="testimonial-quote">"</div>
+<p class="testimonial-text">Aman had our dental office website live in less than 24 hours. The AI chatbot answers patient questions about insurance at 2am so we don't have to. It's paid for itself many times over.</p>
+<div class="testimonial-author"><div class="author-avatar">DR</div><div><div class="stars">★★★★★</div><div class="author-name">Dr. Rachel Kim</div><div class="author-biz">Bright Smiles Dental · Nashville, TN</div></div></div>
+</div>
+<div class="testimonial-card">
+<div class="testimonial-quote">"</div>
+<p class="testimonial-text">Our hookah lounge was getting 50 calls a day asking about hours and prices. Now the chatbot handles all of it. We went from overwhelmed to fully booked on weekends.</p>
+<div class="testimonial-author"><div class="author-avatar">KA</div><div><div class="stars">★★★★★</div><div class="author-name">Khalid Alfarsi</div><div class="author-biz">Cloud Nine Lounge · Atlanta, GA</div></div></div>
+</div>
+<div class="testimonial-card">
+<div class="testimonial-quote">"</div>
+<p class="testimonial-text">I was skeptical at first but the setup was so fast and easy. My salon now books appointments through the site at all hours. Best $149/month I've ever spent on marketing.</p>
+<div class="testimonial-author"><div class="author-avatar">MJ</div><div><div class="stars">★★★★★</div><div class="author-name">Maria Johnson</div><div class="author-biz">Luxe Hair Studio · Austin, TX</div></div></div>
+</div>
+</div>
 </section>
-
-<!-- PRICING -->
-
 <section id="pricing" style="background:var(--surface);border-top:1px solid var(--border);border-bottom:1px solid var(--border);">
-  <div class="section-label">Pricing</div>
-  <h2 class="section-title">Simple, Flat Pricing</h2>
-  <p class="section-sub">No hidden fees. No surprises. Cancel anytime. Updates always included.</p>
-  <div class="pricing-grid reveal">
-    <div class="price-card">
-      <div class="price-tier">Starter</div>
-      <div class="price-amount"><sup>$</sup>79</div>
-      <div class="price-setup">/ month + $100 one-time setup</div>
-      <ul class="price-features">
-        <li>Custom website up to 3 pages</li>
-        <li>AI chatbot — basic Q&A</li>
-        <li>Mobile-friendly design</li>
-        <li>Monthly content updates</li>
-        <li>Contact form & map</li>
-      </ul>
-      <a onclick="goTo('start')" href="javascript:void(0)" class="btn-primary" style="display:block;text-align:center;">Get Started</a>
-    </div>
-    <div class="price-card featured">
-      <div class="featured-badge">⭐ BEST VALUE</div>
-      <div class="price-tier">Standard</div>
-      <div class="price-amount"><sup>$</sup>149</div>
-      <div class="price-setup">/ month + $200 one-time setup</div>
-      <ul class="price-features">
-        <li>Everything in Starter</li>
-        <li>Smart AI chatbot + appointment booking</li>
-        <li>Up to 6 pages</li>
-        <li>Google Maps + reviews</li>
-        <li>Weekly updates</li>
-        <li>Priority support</li>
-      </ul>
-      <a onclick="goTo('start')" href="javascript:void(0)" class="btn-primary" style="display:block;text-align:center;">Get Started</a>
-    </div>
-    <div class="price-card">
-      <div class="price-tier">Premium</div>
-      <div class="price-amount"><sup>$</sup>249</div>
-      <div class="price-setup">/ month + $300 one-time setup</div>
-      <ul class="price-features">
-        <li>Everything in Standard</li>
-        <li>Full AI booking system</li>
-        <li>Google Business optimization</li>
-        <li>Monthly performance report</li>
-        <li>Social media templates</li>
-        <li>Daily updates + dedicated support</li>
-      </ul>
-      <a onclick="goTo('start')" href="javascript:void(0)" class="btn-primary" style="display:block;text-align:center;">Get Started</a>
-    </div>
-  </div>
-
-  <!-- INCOME CALCULATOR -->
-
-  <div style="margin-top:5rem;">
-    <div class="section-label">Income Calculator</div>
-    <h2 class="section-title">Your Monthly Income</h2>
-    <p class="section-sub">Are you a freelancer or agency? See how much you can earn selling this service.</p>
-    <div class="calc-wrap reveal">
-      <div class="calc-row">
-        <div>
-          <div class="calc-label">Number of Clients</div>
-          <div class="slider-wrap">
-            <input type="range" id="clientSlider" min="1" max="50" value="5" oninput="updateCalc()">
-            <div class="range-display" id="clientDisplay">5 clients</div>
-          </div>
-        </div>
-        <div>
-          <div class="calc-label">Average Plan</div>
-          <div class="plan-selector">
-            <button class="plan-btn" onclick="setPlan(79, this)">Starter<br><small>$79/mo</small></button>
-            <button class="plan-btn active" onclick="setPlan(149, this)">Standard<br><small>$149/mo</small></button>
-            <button class="plan-btn" onclick="setPlan(249, this)">Premium<br><small>$249/mo</small></button>
-          </div>
-        </div>
-      </div>
-      <div class="calc-result">
-        <div class="calc-result-label">Monthly Recurring Income</div>
-        <div class="calc-result-value" id="calcValue">$745</div>
-        <div class="calc-result-sub" id="calcSub">5 clients × $149/mo</div>
-        <div class="calc-result-annual" id="calcAnnual">= $8,940/year 🚀</div>
-      </div>
-    </div>
-  </div>
+<div class="section-label">Pricing</div>
+<h2 class="section-title">Simple, Flat Pricing</h2>
+<p class="section-sub">No hidden fees. No surprises. Cancel anytime. Updates always included.</p>
+<div class="pricing-grid reveal">
+<div class="price-card">
+<div class="price-tier">Starter</div>
+<div class="price-amount"><sup>$</sup>79</div>
+<div class="price-setup">/ month + $100 one-time setup</div>
+<ul class="price-features">
+<li>Custom website up to 3 pages</li>
+<li>AI chatbot basic Q and A</li>
+<li>Mobile-friendly design</li>
+<li>Monthly content updates</li>
+<li>Contact form and map</li>
+</ul>
+<a onclick="goTo('start')" href="javascript:void(0)" class="btn-primary" style="display:block;text-align:center;">Get Started</a>
+</div>
+<div class="price-card featured">
+<div class="featured-badge">BEST VALUE</div>
+<div class="price-tier">Standard</div>
+<div class="price-amount"><sup>$</sup>149</div>
+<div class="price-setup">/ month + $200 one-time setup</div>
+<ul class="price-features">
+<li>Everything in Starter</li>
+<li>Smart AI chatbot plus appointment booking</li>
+<li>Up to 6 pages</li>
+<li>Google Maps and reviews</li>
+<li>Weekly updates</li>
+<li>Priority support</li>
+</ul>
+<a onclick="goTo('start')" href="javascript:void(0)" class="btn-primary" style="display:block;text-align:center;">Get Started</a>
+</div>
+<div class="price-card">
+<div class="price-tier">Premium</div>
+<div class="price-amount"><sup>$</sup>249</div>
+<div class="price-setup">/ month + $300 one-time setup</div>
+<ul class="price-features">
+<li>Everything in Standard</li>
+<li>Full AI booking system</li>
+<li>Google Business optimization</li>
+<li>Monthly performance report</li>
+<li>Social media templates</li>
+<li>Daily updates and dedicated support</li>
+</ul>
+<a onclick="goTo('start')" href="javascript:void(0)" class="btn-primary" style="display:block;text-align:center;">Get Started</a>
+</div>
+</div>
+<div style="margin-top:5rem;">
+<div class="section-label">Income Calculator</div>
+<h2 class="section-title">Your Monthly Income</h2>
+<p class="section-sub">Are you a freelancer or agency? See how much you can earn selling this service.</p>
+<div class="calc-wrap reveal">
+<div class="calc-row">
+<div>
+<div class="calc-label">Number of Clients</div>
+<input type="range" id="clientSlider" min="1" max="50" value="5" oninput="updateCalc()">
+<div class="range-display" id="clientDisplay">5 clients</div>
+</div>
+<div>
+<div class="calc-label">Average Plan</div>
+<div class="plan-selector">
+<button class="plan-btn" onclick="setPlan(79,this)">Starter $79</button>
+<button class="plan-btn active" onclick="setPlan(149,this)">Standard $149</button>
+<button class="plan-btn" onclick="setPlan(249,this)">Premium $249</button>
+</div>
+</div>
+</div>
+<div class="calc-result">
+<div class="calc-result-label">Monthly Recurring Income</div>
+<div class="calc-result-value" id="calcValue">$745</div>
+<div class="calc-result-sub" id="calcSub">5 clients x $149/mo</div>
+<div class="calc-result-annual" id="calcAnnual">= $8,940/year</div>
+</div>
+</div>
+</div>
 </section>
-
-<!-- GET STARTED FORM -->
-
 <section id="start">
-  <div class="section-label">Get Started</div>
-  <h2 class="section-title" style="margin-bottom:0.5rem;">Pay & Get Your Site in 24H</h2>
-  <p class="section-sub">Fill out the form below. Aman will contact you within 24 hours to confirm details and collect your setup fee.</p>
-
-  <div class="form-section">
-    <div class="form-progress">
-      <div class="form-progress-bar" id="progressBar" style="width:25%"></div>
-    </div>
-    <div id="formContainer"></div>
-  </div>
+<div class="section-label">Get Started</div>
+<h2 class="section-title" style="margin-bottom:0.5rem;">Pay and Get Your Site in 24H</h2>
+<p class="section-sub">Fill out the form below. Aman will contact you within 24 hours to confirm details and collect your setup fee.</p>
+<div class="form-section">
+<div class="form-progress">
+<div class="form-progress-bar" id="progressBar" style="width:25%"></div>
+</div>
+<div id="formContainer"></div>
+</div>
 </section>
-
-<!-- CONTACT -->
-
 <section style="background:var(--surface);border-top:1px solid var(--border);">
-  <div class="contact-grid">
-    <div>
-      <div class="section-label">Contact</div>
-      <h2 class="section-title">Questions? Reach Out</h2>
-      <p style="color:var(--muted);margin-bottom:2rem;">Text or call Aman directly. Fast responses, real help.</p>
-      <a href="tel:6157391914" class="contact-item">
-        <div class="contact-icon">📞</div>
-        <div><div class="contact-label">Call or Text</div><div class="contact-value">(615) 739-1914</div></div>
-      </a>
-      <a href="mailto:amanlocalai@gmail.com" class="contact-item">
-        <div class="contact-icon">📧</div>
-        <div><div class="contact-label">Email</div><div class="contact-value">amanlocalai@gmail.com</div></div>
-      </a>
-      <a href="https://cash.app/$amanlocalai" target="_blank" class="contact-item">
-        <div class="contact-icon">💵</div>
-        <div><div class="contact-label">Pay via Cash App</div><div class="contact-value">$amanlocalai</div></div>
-      </a>
-    </div>
-    <div>
-      <div style="background:var(--bg);border:1px solid var(--border);border-radius:var(--radius);padding:2rem;text-align:center;">
-        <div style="font-size:3rem;margin-bottom:1rem;">📍</div>
-        <div style="font-family:var(--font-display);font-weight:700;font-size:1.2rem;margin-bottom:0.5rem;">Based in Tucker, Georgia</div>
-        <div style="color:var(--muted);font-size:0.9rem;margin-bottom:1.5rem;">Serving local businesses across the United States</div>
-        <div style="display:flex;gap:0.8rem;flex-wrap:wrap;justify-content:center;">
-          <span style="background:rgba(0,229,255,0.08);border:1px solid rgba(0,229,255,0.2);color:var(--accent);padding:0.3rem 0.8rem;border-radius:100px;font-size:0.8rem;font-weight:600;">✓ Cash App</span>
-          <span style="background:rgba(0,229,255,0.08);border:1px solid rgba(0,229,255,0.2);color:var(--accent);padding:0.3rem 0.8rem;border-radius:100px;font-size:0.8rem;font-weight:600;">✓ Zelle</span>
-          <span style="background:rgba(0,229,255,0.08);border:1px solid rgba(0,229,255,0.2);color:var(--accent);padding:0.3rem 0.8rem;border-radius:100px;font-size:0.8rem;font-weight:600;">✓ Venmo</span>
-          <span style="background:rgba(0,229,255,0.08);border:1px solid rgba(0,229,255,0.2);color:var(--accent);padding:0.3rem 0.8rem;border-radius:100px;font-size:0.8rem;font-weight:600;">✓ PayPal</span>
-        </div>
-      </div>
-    </div>
-  </div>
+<div class="contact-grid">
+<div>
+<div class="section-label">Contact</div>
+<h2 class="section-title">Questions? Reach Out</h2>
+<p style="color:var(--muted);margin-bottom:2rem;">Text or call Aman directly. Fast responses, real help.</p>
+<a href="tel:6157391914" class="contact-item">
+<div class="contact-icon">📞</div>
+<div><div class="contact-label">Call or Text</div><div class="contact-value">(615) 739-1914</div></div>
+</a>
+<a href="mailto:amanlocalai@gmail.com" class="contact-item">
+<div class="contact-icon">📧</div>
+<div><div class="contact-label">Email</div><div class="contact-value">amanlocalai@gmail.com</div></div>
+</a>
+<a href="https://cash.app/$amanlocalai" target="_blank" class="contact-item">
+<div class="contact-icon">💵</div>
+<div><div class="contact-label">Pay via Cash App</div><div class="contact-value">$amanlocalai</div></div>
+</a>
+</div>
+<div>
+<div style="background:var(--bg);border:1px solid var(--border);border-radius:var(--radius);padding:2rem;text-align:center;">
+<div style="font-size:3rem;margin-bottom:1rem;">📍</div>
+<div style="font-family:var(--font-display);font-weight:700;font-size:1.2rem;margin-bottom:0.5rem;">Based in Tucker, Georgia</div>
+<div style="color:var(--muted);font-size:0.9rem;margin-bottom:1.5rem;">Serving local businesses across the United States</div>
+<div style="display:flex;gap:0.8rem;flex-wrap:wrap;justify-content:center;">
+<span style="background:rgba(0,229,255,0.08);border:1px solid rgba(0,229,255,0.2);color:var(--accent);padding:0.3rem 0.8rem;border-radius:100px;font-size:0.8rem;font-weight:600;">Cash App</span>
+<span style="background:rgba(0,229,255,0.08);border:1px solid rgba(0,229,255,0.2);color:var(--accent);padding:0.3rem 0.8rem;border-radius:100px;font-size:0.8rem;font-weight:600;">Zelle</span>
+<span style="background:rgba(0,229,255,0.08);border:1px solid rgba(0,229,255,0.2);color:var(--accent);padding:0.3rem 0.8rem;border-radius:100px;font-size:0.8rem;font-weight:600;">Venmo</span>
+<span style="background:rgba(0,229,255,0.08);border:1px solid rgba(0,229,255,0.2);color:var(--accent);padding:0.3rem 0.8rem;border-radius:100px;font-size:0.8rem;font-weight:600;">PayPal</span>
+</div>
+</div>
+</div>
+</div>
 </section>
-
-<!-- FOOTER -->
-
 <footer>
-  <div class="footer-logo">LOCAL<span style="color:var(--text)">AI</span> Sites</div>
-  <div class="footer-text">Built by Aman · Based in Tucker, Georgia · Serving the United States · © 2025 LocalAI Sites</div>
-  <a href="javascript:void(0)" onclick="openAdmin(event)" style="color:var(--muted);font-size:0.85rem;text-decoration:none;">Admin ⚙️</a>
+<div class="footer-logo">LOCAL<span style="color:var(--text)">AI</span> Sites</div>
+<div class="footer-text">Built by Aman · Based in Tucker, Georgia · Serving the United States · 2025 LocalAI Sites</div>
+<a href="javascript:void(0)" onclick="openAdmin(event)" style="color:var(--muted);font-size:0.85rem;text-decoration:none;">Admin</a>
 </footer>
-
-<!-- ADMIN LOGIN MODAL -->
-
 <div class="admin-modal" id="adminModal">
-  <div class="admin-box">
-    <div style="display:flex;justify-content:space-between;align-items:start;margin-bottom:1.5rem;">
-      <div>
-        <div class="admin-title">🔐 Admin Access</div>
-        <div class="admin-sub">Enter your password to access the dashboard</div>
-      </div>
-      <button onclick="closeAdmin()" style="background:none;border:none;color:var(--muted);cursor:pointer;font-size:1.2rem;">✕</button>
-    </div>
-    <input type="password" class="admin-input" id="adminPass" placeholder="Password" onkeydown="if(event.key==='Enter')checkAdmin()">
-    <div class="admin-error" id="adminError">Incorrect password. Try again.</div>
-    <div class="admin-btns">
-      <button class="btn-next" onclick="checkAdmin()" style="flex:1;">Unlock Dashboard</button>
-      <button class="btn-back" onclick="closeAdmin()">Cancel</button>
-    </div>
-  </div>
+<div class="admin-box">
+<div style="display:flex;justify-content:space-between;align-items:start;margin-bottom:1.5rem;">
+<div>
+<div class="admin-title">Admin Access</div>
+<div class="admin-sub">Enter your password to access the dashboard</div>
 </div>
-
-<!-- DASHBOARD MODAL -->
-
+<button onclick="closeAdmin()" style="background:none;border:none;color:var(--muted);cursor:pointer;font-size:1.2rem;">X</button>
+</div>
+<input type="password" class="admin-input" id="adminPass" placeholder="Password" onkeydown="if(event.key==='Enter')checkAdmin()">
+<div class="admin-error" id="adminError">Incorrect password. Try again.</div>
+<div class="admin-btns">
+<button class="btn-next" onclick="checkAdmin()" style="flex:1;">Unlock Dashboard</button>
+<button class="btn-back" onclick="closeAdmin()">Cancel</button>
+</div>
+</div>
+</div>
 <div class="dashboard-modal" id="dashboardModal">
-  <div class="dash-header">
-    <div>
-      <div style="color:var(--muted);font-size:0.8rem;margin-bottom:0.3rem;">LOCALAI SITES</div>
-      <div class="dash-title">Aman's Dashboard</div>
-    </div>
-    <button class="btn-back" onclick="closeDashboard()">🔒 Lock & Exit</button>
-  </div>
-  <div class="dash-stats">
-    <div class="dash-stat"><div class="dash-stat-label">Monthly Recurring</div><div class="dash-stat-value" id="dash-mrr">$0</div></div>
-    <div class="dash-stat"><div class="dash-stat-label">Active Clients</div><div class="dash-stat-value" id="dash-clients">0</div></div>
-    <div class="dash-stat"><div class="dash-stat-label">Setup Fees Earned</div><div class="dash-stat-value" id="dash-setup">$0</div></div>
-    <div class="dash-stat"><div class="dash-stat-label">Pipeline (prospects)</div><div class="dash-stat-value" id="dash-pipeline">0</div></div>
-  </div>
-  <div class="dash-section">
-    <div class="dash-section-title">💼 Active Clients</div>
-    <table class="dash-table">
-      <thead><tr><th>Business</th><th>Plan</th><th>Status</th><th>$/mo</th><th>Actions</th></tr></thead>
-      <tbody id="clientsTable"><tr><td colspan="5" style="color:var(--muted);text-align:center;padding:2rem;">No clients yet. Add your first one!</td></tr></tbody>
-    </table>
-    <button class="btn-next" style="margin-top:1rem;" onclick="addClient()">+ Add New Client</button>
-  </div>
-  <div class="dash-section">
-    <div class="dash-section-title">🎯 Sales Pipeline</div>
-    <table class="dash-table">
-      <thead><tr><th>Business</th><th>Industry</th><th>Stage</th><th>Actions</th></tr></thead>
-      <tbody id="pipelineTable"><tr><td colspan="4" style="color:var(--muted);text-align:center;padding:2rem;">No prospects yet.</td></tr></tbody>
-    </table>
-    <button class="btn-next" style="margin-top:1rem;" onclick="addProspect()">+ Add Prospect</button>
-  </div>
+<div class="dash-header">
+<div>
+<div style="color:var(--muted);font-size:0.8rem;margin-bottom:0.3rem;">LOCALAI SITES</div>
+<div class="dash-title">Aman's Dashboard</div>
 </div>
-
+<button class="btn-back" onclick="closeDashboard()">Lock and Exit</button>
+</div>
+<div class="dash-stats">
+<div class="dash-stat"><div class="dash-stat-label">Monthly Recurring</div><div class="dash-stat-value" id="dash-mrr">$0</div></div>
+<div class="dash-stat"><div class="dash-stat-label">Active Clients</div><div class="dash-stat-value" id="dash-clients">0</div></div>
+<div class="dash-stat"><div class="dash-stat-label">Setup Fees Earned</div><div class="dash-stat-value" id="dash-setup">$0</div></div>
+<div class="dash-stat"><div class="dash-stat-label">Pipeline</div><div class="dash-stat-value" id="dash-pipeline">0</div></div>
+</div>
+<div class="dash-section">
+<div class="dash-section-title">Active Clients</div>
+<table class="dash-table">
+<thead><tr><th>Business</th><th>Plan</th><th>Status</th><th>$/mo</th><th>Actions</th></tr></thead>
+<tbody id="clientsTable"><tr><td colspan="5" style="color:var(--muted);text-align:center;padding:2rem;">No clients yet. Add your first one!</td></tr></tbody>
+</table>
+<button class="btn-next" style="margin-top:1rem;" onclick="addClient()">+ Add New Client</button>
+</div>
+<div class="dash-section">
+<div class="dash-section-title">Sales Pipeline</div>
+<table class="dash-table">
+<thead><tr><th>Business</th><th>Industry</th><th>Stage</th><th>Actions</th></tr></thead>
+<tbody id="pipelineTable"><tr><td colspan="4" style="color:var(--muted);text-align:center;padding:2rem;">No prospects yet.</td></tr></tbody>
+</table>
+<button class="btn-next" style="margin-top:1rem;" onclick="addProspect()">+ Add Prospect</button>
+</div>
+</div>
 <script>
-// SMOOTH SCROLL HELPER
-function goTo(id) {
-  closeMenu();
-  const el = document.getElementById(id);
-  if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+function goTo(id){
+closeMenu();
+var el=document.getElementById(id);
+if(el)el.scrollIntoView({behavior:'smooth',block:'start'});
 }
-
-// MARQUEE
-const industries = ['✦ Dental Offices','✦ Hookah Lounges','✦ Restaurants','✦ Hair Salons','✦ Nail Salons','✦ Barbershops','✦ Med Spas','✦ Chiropractors','✦ Law Offices','✦ Gyms & Fitness'];
-const track = document.getElementById('marqueeTrack');
-const items = [...industries, ...industries].map(i => `<div class="marquee-item">${i}</div>`).join('');
-track.innerHTML = items;
-
-// HAMBURGER
-function toggleMenu() {
-  const h = document.getElementById('hamburger');
-  const m = document.getElementById('mobileMenu');
-  h.classList.toggle('open');
-  m.classList.toggle('open');
+function toggleMenu(){
+var h=document.getElementById('hamburger');
+var m=document.getElementById('mobileMenu');
+h.classList.toggle('open');
+m.classList.toggle('open');
 }
-function closeMenu() {
-  document.getElementById('hamburger').classList.remove('open');
-  document.getElementById('mobileMenu').classList.remove('open');
+function closeMenu(){
+document.getElementById('hamburger').classList.remove('open');
+document.getElementById('mobileMenu').classList.remove('open');
 }
-
-// CALCULATOR
-let currentPlan = 149;
-function setPlan(price, btn) {
-  currentPlan = price;
-  document.querySelectorAll('.plan-btn').forEach(b => b.classList.remove('active'));
-  btn.classList.add('active');
-  updateCalc();
+var industries=['Dental Offices','Hookah Lounges','Restaurants','Hair Salons','Nail Salons','Barbershops','Med Spas','Chiropractors','Law Offices','Gyms and Fitness'];
+var track=document.getElementById('marqueeTrack');
+var items=industries.concat(industries).map(function(i){return '<div class="marquee-item">'+i+'</div>';}).join('');
+track.innerHTML=items;
+var currentPlan=149;
+function setPlan(price,btn){
+currentPlan=price;
+document.querySelectorAll('.plan-btn').forEach(function(b){b.classList.remove('active');});
+btn.classList.add('active');
+updateCalc();
 }
-function updateCalc() {
-  const clients = parseInt(document.getElementById('clientSlider').value);
-  const monthly = clients * currentPlan;
-  const annual = monthly * 12;
-  document.getElementById('clientDisplay').textContent = `${clients} client${clients !== 1 ? 's' : ''}`;
-  const el = document.getElementById('calcValue');
-  el.style.transform = 'scale(1.05)';
-  el.textContent = `$${monthly.toLocaleString()}`;
-  setTimeout(() => el.style.transform = 'scale(1)', 200);
-  document.getElementById('calcSub').textContent = `${clients} clients × $${currentPlan}/mo`;
-  document.getElementById('calcAnnual').textContent = `= $${annual.toLocaleString()}/year 🚀`;
+function updateCalc(){
+var clients=parseInt(document.getElementById('clientSlider').value);
+var monthly=clients*currentPlan;
+var annual=monthly*12;
+document.getElementById('clientDisplay').textContent=clients+' client'+(clients!==1?'s':'');
+document.getElementById('calcValue').textContent='$'+monthly.toLocaleString();
+document.getElementById('calcSub').textContent=clients+' clients x $'+currentPlan+'/mo';
+document.getElementById('calcAnnual').textContent='= $'+annual.toLocaleString()+'/year';
 }
-
-// FORM STATE
-let formStep = 1;
-const totalSteps = 4;
-const formData = {};
-
-function renderForm() {
-  const progress = (formStep / totalSteps) * 100;
-  document.getElementById('progressBar').style.width = progress + '%';
-  const container = document.getElementById('formContainer');
-
-  if (formStep === 1) {
-    container.innerHTML = `
-      <div class="form-header">
-        <div class="form-step-label">Step 1 of 4</div>
-        <div class="form-step-count">Tell Us About Your Business</div>
-      </div>
-      <div class="form-body">
-        <div class="form-title">Let's Build Your Site</div>
-        <div class="form-subtitle">Tell us about your business — this takes less than 3 minutes.</div>
-        <div class="form-group"><label>Business Name *</label><input type="text" id="f_name" placeholder="e.g. Bright Smiles Dental" value="${formData.name||''}"></div>
-        <div class="form-group"><label>Business Type *</label>
-          <select id="f_type">
-            <option value="">Select...</option>
-            <option ${formData.type==='dental'?'selected':''} value="dental">🦷 Dental Office</option>
-            <option ${formData.type==='hookah'?'selected':''} value="hookah">💨 Hookah Lounge</option>
-            <option ${formData.type==='restaurant'?'selected':''} value="restaurant">🍽️ Restaurant</option>
-            <option ${formData.type==='salon'?'selected':''} value="salon">💇 Salon / Barbershop</option>
-            <option ${formData.type==='gym'?'selected':''} value="gym">🏃 Gym / Fitness</option>
-            <option ${formData.type==='medical'?'selected':''} value="medical">🏥 Medical / Clinic</option>
-            <option ${formData.type==='law'?'selected':''} value="law">⚖️ Law Office</option>
-            <option ${formData.type==='other'?'selected':''} value="other">🏢 Other Business</option>
-          </select>
-        </div>
-        <div class="form-row">
-          <div class="form-group"><label>City & State *</label><input type="text" id="f_city" placeholder="e.g. Nashville, TN" value="${formData.city||''}"></div>
-          <div class="form-group"><label>Phone Number</label><input type="tel" id="f_phone" placeholder="(555) 000-0000" value="${formData.phone||''}"></div>
-        </div>
-        <div class="form-group"><label>Current Website (if any)</label><input type="url" id="f_website" placeholder="https://" value="${formData.website||''}"></div>
-        <div class="form-nav">
-          <div></div>
-          <button class="btn-next" onclick="nextStep(1)">Continue →</button>
-        </div>
-      </div>`;
-  } else if (formStep === 2) {
-    container.innerHTML = `
-      <div class="form-header">
-        <div class="form-step-label">Step 2 of 4</div>
-        <div class="form-step-count">Your Services & Hours</div>
-      </div>
-      <div class="form-body">
-        <div class="form-title">Services & Hours</div>
-        <div class="form-subtitle">This helps us train your AI chatbot to answer customer questions correctly.</div>
-        <div class="form-group"><label>Main Services Offered</label><textarea id="f_services" placeholder="e.g. Cleanings, whitening, crowns, emergency care...">${formData.services||''}</textarea></div>
-
-```
-    <div class="form-row">
-      <div class="form-group"><label>Weekday Hours</label><input type="text" id="f_weekday" placeholder="e.g. Mon–Fri 9am–6pm" value="${formData.weekday||''}"></div>
-      <div class="form-group"><label>Weekend Hours</label><input type="text" id="f_weekend" placeholder="e.g. Sat 10am–4pm, Sun Closed" value="${formData.weekend||''}"></div>
-    </div>
-    <div class="form-group"><label>Anything else the chatbot should know?</label><textarea id="f_notes" placeholder="Special offers, parking info, insurance accepted...">${formData.notes||''}</textarea></div>
-    <div class="form-nav">
-      <button class="btn-back" onclick="prevStep()">← Back</button>
-      <button class="btn-next" onclick="nextStep(2)">Continue →</button>
-    </div>
-  </div>`;
-```
-
-} else if (formStep === 3) {
-container.innerHTML = ` <div class="form-header"> <div class="form-step-label">Step 3 of 4</div> <div class="form-step-count">Pick Your Plan</div> </div> <div class="form-body"> <div class="form-title">Pick Your Plan</div> <div class="form-subtitle">All plans include a custom website + AI chatbot. Cancel anytime.</div> <div class="plan-select-grid"> <div class="plan-option ${formData.plan==='starter'?'selected':''}" onclick="selectPlan('starter',this)"> <div class="plan-option-name">Starter</div> <div class="plan-option-price">$79/mo</div> <div class="plan-option-setup">+$100 setup</div> </div> <div class="plan-option ${(!formData.plan||formData.plan==='standard')?'selected':''}" onclick="selectPlan('standard',this)"> <div class="plan-option-name">⭐ Standard</div> <div class="plan-option-price">$149/mo</div> <div class="plan-option-setup">+$200 setup</div> </div> <div class="plan-option ${formData.plan==='premium'?'selected':''}" onclick="selectPlan('premium',this)"> <div class="plan-option-name">Premium</div> <div class="plan-option-price">$249/mo</div> <div class="plan-option-setup">+$300 setup</div> </div> </div> <div class="form-row"> <div class="form-group"><label>Your Name *</label><input type="text" id="f_contact" placeholder="Your full name" value="${formData.contact||''}"></div> <div class="form-group"><label>Your Email *</label><input type="email" id="f_email" placeholder="you@email.com" value="${formData.email||''}"></div> </div> <div class="form-nav"> <button class="btn-back" onclick="prevStep()">← Back</button> <button class="btn-next" onclick="nextStep(3)">Review My Order →</button> </div> </div>`;
-if (!formData.plan) selectPlanDefault();
-} else if (formStep === 4) {
-const planPrices = { starter: ‘$79/mo + $100 setup’, standard: ‘$149/mo + $200 setup’, premium: ‘$249/mo + $300 setup’ };
-container.innerHTML = ` <div class="success-state"> <div class="success-icon">🎉</div> <div class="success-title">Request Received!</div> <div class="success-text">Aman will contact you within 24 hours to confirm your details and get started.</div> <div class="success-info"> <strong>${formData.name}</strong><br> Plan: <strong style="color:var(--accent);text-transform:capitalize">${formData.plan||'Standard'}</strong> — ${planPrices[formData.plan||'standard']}<br> 📞 Expect a call or text to <strong>${formData.phone||formData.email}</strong><br><br> 💬 Questions? Text: <a href="tel:6157391914" style="color:var(--accent)">(615) 739-1914</a> </div> <div style="margin-top:1.5rem;display:flex;gap:1rem;justify-content:center;flex-wrap:wrap;"> <a href="https://cash.app/$amanlocalai" target="_blank" class="btn-primary">💵 Pay via Cash App</a> <button class="btn-secondary" onclick="resetForm()">Submit Another</button> </div> </div>`;
+var formStep=1;
+var formData={};
+function renderForm(){
+var progress=(formStep/4)*100;
+document.getElementById('progressBar').style.width=progress+'%';
+var c=document.getElementById('formContainer');
+if(formStep===1){
+c.innerHTML='<div class="form-header"><div class="form-step-label">Step 1 of 4</div><div class="form-step-count">About Your Business</div></div><div class="form-body"><div class="form-title">Lets Build Your Site</div><div class="form-subtitle">Tell us about your business. Takes under 3 minutes.</div><div class="form-group"><label>Business Name</label><input type="text" id="f_name" placeholder="e.g. Bright Smiles Dental" value="'+(formData.name||'')+'"></div><div class="form-group"><label>Business Type</label><select id="f_type"><option value="">Select...</option><option value="dental">Dental Office</option><option value="hookah">Hookah Lounge</option><option value="restaurant">Restaurant</option><option value="salon">Salon or Barbershop</option><option value="gym">Gym or Fitness</option><option value="medical">Medical or Clinic</option><option value="law">Law Office</option><option value="other">Other Business</option></select></div><div class="form-group"><label>City and State</label><input type="text" id="f_city" placeholder="e.g. Nashville, TN" value="'+(formData.city||'')+'"></div><div class="form-group"><label>Phone Number</label><input type="tel" id="f_phone" placeholder="(555) 000-0000" value="'+(formData.phone||'')+'"></div><div class="form-nav"><div></div><button class="btn-next" onclick="nextStep(1)">Continue</button></div></div>';
+}else if(formStep===2){
+c.innerHTML='<div class="form-header"><div class="form-step-label">Step 2 of 4</div><div class="form-step-count">Services and Hours</div></div><div class="form-body"><div class="form-title">Services and Hours</div><div class="form-subtitle">This helps us train your AI chatbot to answer customer questions correctly.</div><div class="form-group"><label>Main Services Offered</label><textarea id="f_services" placeholder="e.g. Cleanings, whitening, crowns...">'+(formData.services||'')+'</textarea></div><div class="form-group"><label>Weekday Hours</label><input type="text" id="f_weekday" placeholder="e.g. Mon to Fri 9am to 6pm" value="'+(formData.weekday||'')+'"></div><div class="form-group"><label>Weekend Hours</label><input type="text" id="f_weekend" placeholder="e.g. Sat 10am to 4pm, Sun Closed" value="'+(formData.weekend||'')+'"></div><div class="form-group"><label>Anything else the chatbot should know?</label><textarea id="f_notes" placeholder="Special offers, parking info, insurance accepted...">'+(formData.notes||'')+'</textarea></div><div class="form-nav"><button class="btn-back" onclick="prevStep()">Back</button><button class="btn-next" onclick="nextStep(2)">Continue</button></div></div>';
+}else if(formStep===3){
+c.innerHTML='<div class="form-header"><div class="form-step-label">Step 3 of 4</div><div class="form-step-count">Pick Your Plan</div></div><div class="form-body"><div class="form-title">Pick Your Plan</div><div class="form-subtitle">All plans include a custom website and AI chatbot. Cancel anytime.</div><div class="plan-select-grid"><div class="plan-option'+(formData.plan==='starter'?' selected':'')+'" onclick="selectPlan(\'starter\',this)"><div class="plan-option-name">Starter</div><div class="plan-option-price">$79/mo</div><div class="plan-option-setup">+$100 setup</div></div><div class="plan-option'+((!formData.plan||formData.plan==='standard')?' selected':'')+'" onclick="selectPlan(\'standard\',this)"><div class="plan-option-name">Standard</div><div class="plan-option-price">$149/mo</div><div class="plan-option-setup">+$200 setup</div></div><div class="plan-option'+(formData.plan==='premium'?' selected':'')+'" onclick="selectPlan(\'premium\',this)"><div class="plan-option-name">Premium</div><div class="plan-option-price">$249/mo</div><div class="plan-option-setup">+$300 setup</div></div></div><div class="form-group"><label>Your Name</label><input type="text" id="f_contact" placeholder="Your full name" value="'+(formData.contact||'')+'"></div><div class="form-group"><label>Your Email</label><input type="email" id="f_email" placeholder="you@email.com" value="'+(formData.email||'')+'"></div><div class="form-nav"><button class="btn-back" onclick="prevStep()">Back</button><button class="btn-next" onclick="nextStep(3)">Review My Order</button></div></div>';
+}else if(formStep===4){
+c.innerHTML='<div class="success-state"><div class="success-icon">🎉</div><div class="success-title">Request Received!</div><div class="success-text">Aman will contact you within 24 hours to confirm your details and get started.</div><div class="success-info"><strong>'+(formData.name||'')+'</strong><br>Plan: '+(formData.plan||'standard')+'<br>Contact: '+(formData.phone||formData.email||'')+'<br><br>Questions? Text: (615) 739-1914</div><div style="margin-top:1.5rem;display:flex;gap:1rem;justify-content:center;flex-wrap:wrap;"><a href="https://cash.app/$amanlocalai" target="_blank" class="btn-primary">Pay via Cash App</a><button class="btn-secondary" onclick="resetForm()">Submit Another</button></div></div>';
 }
 }
-
-function nextStep(step) {
-if (step === 1) {
-const name = document.getElementById(‘f_name’).value.trim();
-const type = document.getElementById(‘f_type’).value;
-const city = document.getElementById(‘f_city’).value.trim();
-if (!name || !type || !city) { alert(‘Please fill in all required fields.’); return; }
-formData.name = name; formData.type = type; formData.city = city;
-formData.phone = document.getElementById(‘f_phone’).value;
-formData.website = document.getElementById(‘f_website’).value;
-} else if (step === 2) {
-formData.services = document.getElementById(‘f_services’).value;
-formData.weekday = document.getElementById(‘f_weekday’).value;
-formData.weekend = document.getElementById(‘f_weekend’).value;
-formData.notes = document.getElementById(‘f_notes’).value;
-} else if (step === 3) {
-const contact = document.getElementById(‘f_contact’).value.trim();
-const email = document.getElementById(‘f_email’).value.trim();
-if (!contact || !email) { alert(‘Please enter your name and email.’); return; }
-formData.contact = contact; formData.email = email;
+function nextStep(step){
+if(step===1){
+var name=document.getElementById('f_name').value.trim();
+var type=document.getElementById('f_type').value;
+var city=document.getElementById('f_city').value.trim();
+if(!name||!type||!city){alert('Please fill in all required fields.');return;}
+formData.name=name;formData.type=type;formData.city=city;
+formData.phone=document.getElementById('f_phone').value;
+}else if(step===2){
+formData.services=document.getElementById('f_services').value;
+formData.weekday=document.getElementById('f_weekday').value;
+formData.weekend=document.getElementById('f_weekend').value;
+formData.notes=document.getElementById('f_notes').value;
+}else if(step===3){
+var contact=document.getElementById('f_contact').value.trim();
+var email=document.getElementById('f_email').value.trim();
+if(!contact||!email){alert('Please enter your name and email.');return;}
+formData.contact=contact;formData.email=email;
 }
-formStep++;
+formStep=formStep+1;
 renderForm();
-document.getElementById(‘start’).scrollIntoView({behavior:‘smooth’,block:‘start’});
+document.getElementById('start').scrollIntoView({behavior:'smooth',block:'start'});
 }
-
-function prevStep() { formStep–; renderForm(); }
-function resetForm() { formStep = 1; Object.keys(formData).forEach(k => delete formData[k]); renderForm(); }
-
-function selectPlan(plan, el) {
-formData.plan = plan;
-document.querySelectorAll(’.plan-option’).forEach(p => p.classList.remove(‘selected’));
-el.classList.add(‘selected’);
-}
-
-function selectPlanDefault() {
-setTimeout(() => {
-const opts = document.querySelectorAll(’.plan-option’);
-if (opts[1]) { opts[1].classList.add(‘selected’); formData.plan = ‘standard’; }
-}, 0);
-}
-
+function prevStep(){
+formStep=formStep-1;
 renderForm();
-
-// ADMIN - Secure password (hash stored, not visible in source)
-const ADMIN_HASH = ‘aman2025’;
-
-function openAdmin(e) {
+}
+function resetForm(){
+formStep=1;
+formData={};
+renderForm();
+}
+function selectPlan(plan,el){
+formData.plan=plan;
+document.querySelectorAll('.plan-option').forEach(function(p){p.classList.remove('selected');});
+el.classList.add('selected');
+}
+renderForm();
+var ADMIN_HASH='aman2025';
+function openAdmin(e){
 e.preventDefault();
-document.getElementById(‘adminModal’).classList.add(‘open’);
-document.getElementById(‘adminPass’).value = ‘’;
-document.getElementById(‘adminError’).style.display = ‘none’;
-setTimeout(() => document.getElementById(‘adminPass’).focus(), 100);
+document.getElementById('adminModal').classList.add('open');
+document.getElementById('adminPass').value='';
+document.getElementById('adminError').style.display='none';
 }
-
-function closeAdmin() {
-document.getElementById(‘adminModal’).classList.remove(‘open’);
+function closeAdmin(){
+document.getElementById('adminModal').classList.remove('open');
 }
-
-function checkAdmin() {
-const pass = document.getElementById(‘adminPass’).value;
-if (pass === ADMIN_HASH) {
+function checkAdmin(){
+var pass=document.getElementById('adminPass').value;
+if(pass===ADMIN_HASH){
 closeAdmin();
 openDashboard();
-} else {
-document.getElementById(‘adminError’).style.display = ‘block’;
-document.getElementById(‘adminPass’).value = ‘’;
-document.getElementById(‘adminPass’).focus();
+}else{
+document.getElementById('adminError').style.display='block';
+document.getElementById('adminPass').value='';
 }
 }
-
-function openDashboard() {
+function openDashboard(){
 loadDashboard();
-document.getElementById(‘dashboardModal’).classList.add(‘open’);
+document.getElementById('dashboardModal').classList.add('open');
 }
-
-function closeDashboard() {
-document.getElementById(‘dashboardModal’).classList.remove(‘open’);
+function closeDashboard(){
+document.getElementById('dashboardModal').classList.remove('open');
 }
-
-// DASHBOARD DATA (localStorage for admin persistence)
-function getDashData() {
-try { return JSON.parse(localStorage.getItem(‘localai_dash’) || ‘{“clients”:[],“pipeline”:[]}’); }
-catch { return {clients:[], pipeline:[]}; }
+function getDashData(){
+try{return JSON.parse(localStorage.getItem('localai_dash')||'{"clients":[],"pipeline":[]}');}
+catch(e){return{clients:[],pipeline:[]};}
 }
-function saveDashData(data) { localStorage.setItem(‘localai_dash’, JSON.stringify(data)); }
-
-function loadDashboard() {
-const data = getDashData();
-const mrr = data.clients.reduce((s,c) => s + (parseInt(c.price)||0), 0);
-const setup = data.clients.length * 150;
-document.getElementById(‘dash-mrr’).textContent = ‘$’ + mrr.toLocaleString();
-document.getElementById(‘dash-clients’).textContent = data.clients.length;
-document.getElementById(‘dash-setup’).textContent = ‘$’ + setup.toLocaleString();
-document.getElementById(‘dash-pipeline’).textContent = data.pipeline.length;
-
-const ct = document.getElementById(‘clientsTable’);
-if (data.clients.length === 0) {
-ct.innerHTML = ‘<tr><td colspan="5" style="color:var(--muted);text-align:center;padding:2rem;">No clients yet. Add your first one!</td></tr>’;
-} else {
-ct.innerHTML = data.clients.map((c,i) => ` <tr> <td>${c.name}</td> <td style="text-transform:capitalize">${c.plan}</td> <td><span style="color:#4ade80;font-size:0.8rem;">● Live</span></td> <td style="color:var(--accent)">$${c.price}/mo</td> <td><button onclick="removeClient(${i})" style="background:rgba(239,68,68,0.1);border:1px solid rgba(239,68,68,0.3);color:#f87171;padding:0.2rem 0.6rem;border-radius:4px;cursor:pointer;font-size:0.8rem;">Remove</button></td> </tr>`).join(’’);
+function saveDashData(data){
+localStorage.setItem('localai_dash',JSON.stringify(data));
 }
-
-const pt = document.getElementById(‘pipelineTable’);
-if (data.pipeline.length === 0) {
-pt.innerHTML = ‘<tr><td colspan="4" style="color:var(--muted);text-align:center;padding:2rem;">No prospects yet.</td></tr>’;
-} else {
-pt.innerHTML = data.pipeline.map((p,i) => ` <tr> <td>${p.name}</td> <td>${p.industry}</td> <td><span style="color:var(--accent3)">${p.stage}</span></td> <td><button onclick="removeProspect(${i})" style="background:rgba(239,68,68,0.1);border:1px solid rgba(239,68,68,0.3);color:#f87171;padding:0.2rem 0.6rem;border-radius:4px;cursor:pointer;font-size:0.8rem;">Remove</button></td> </tr>`).join(’’);
+function loadDashboard(){
+var data=getDashData();
+var mrr=data.clients.reduce(function(s,c){return s+(parseInt(c.price)||0);},0);
+document.getElementById('dash-mrr').textContent='$'+mrr.toLocaleString();
+document.getElementById('dash-clients').textContent=data.clients.length;
+document.getElementById('dash-setup').textContent='$'+(data.clients.length*150).toLocaleString();
+document.getElementById('dash-pipeline').textContent=data.pipeline.length;
+var ct=document.getElementById('clientsTable');
+if(data.clients.length===0){
+ct.innerHTML='<tr><td colspan="5" style="color:var(--muted);text-align:center;padding:2rem;">No clients yet. Add your first one!</td></tr>';
+}else{
+ct.innerHTML=data.clients.map(function(c,i){return '<tr><td>'+c.name+'</td><td>'+c.plan+'</td><td>Live</td><td>$'+c.price+'/mo</td><td><button onclick="removeClient('+i+')" style="background:rgba(239,68,68,0.1);border:1px solid rgba(239,68,68,0.3);color:#f87171;padding:0.2rem 0.6rem;border-radius:4px;cursor:pointer;">Remove</button></td></tr>';}).join('');
+}
+var pt=document.getElementById('pipelineTable');
+if(data.pipeline.length===0){
+pt.innerHTML='<tr><td colspan="4" style="color:var(--muted);text-align:center;padding:2rem;">No prospects yet.</td></tr>';
+}else{
+pt.innerHTML=data.pipeline.map(function(p,i){return '<tr><td>'+p.name+'</td><td>'+p.industry+'</td><td>'+p.stage+'</td><td><button onclick="removeProspect('+i+')" style="background:rgba(239,68,68,0.1);border:1px solid rgba(239,68,68,0.3);color:#f87171;padding:0.2rem 0.6rem;border-radius:4px;cursor:pointer;">Remove</button></td></tr>';}).join('');
 }
 }
-
-function addClient() {
-const name = prompt(‘Business name:’);
-if (!name) return;
-const plan = prompt(‘Plan (starter/standard/premium):’) || ‘standard’;
-const prices = {starter:79, standard:149, premium:249};
-const data = getDashData();
-data.clients.push({name, plan, price: prices[plan]||149});
+function addClient(){
+var name=prompt('Business name:');
+if(!name)return;
+var plan=prompt('Plan (starter/standard/premium):')||'standard';
+var prices={starter:79,standard:149,premium:249};
+var data=getDashData();
+data.clients.push({name:name,plan:plan,price:prices[plan]||149});
 saveDashData(data);
 loadDashboard();
 }
-
-function removeClient(i) {
-if (!confirm(‘Remove this client?’)) return;
-const data = getDashData();
+function removeClient(i){
+if(!confirm('Remove this client?'))return;
+var data=getDashData();
 data.clients.splice(i,1);
 saveDashData(data);
 loadDashboard();
 }
-
-function addProspect() {
-const name = prompt(‘Business name:’);
-if (!name) return;
-const industry = prompt(‘Industry:’) || ‘Other’;
-const stage = prompt(‘Stage (Lead/Demo/Proposal/Closing):’) || ‘Lead’;
-const data = getDashData();
-data.pipeline.push({name, industry, stage});
+function addProspect(){
+var name=prompt('Business name:');
+if(!name)return;
+var industry=prompt('Industry:')||'Other';
+var stage=prompt('Stage (Lead/Demo/Proposal/Closing):')||'Lead';
+var data=getDashData();
+data.pipeline.push({name:name,industry:industry,stage:stage});
 saveDashData(data);
 loadDashboard();
 }
-
-function removeProspect(i) {
-if (!confirm(‘Remove this prospect?’)) return;
-const data = getDashData();
+function removeProspect(i){
+if(!confirm('Remove this prospect?'))return;
+var data=getDashData();
 data.pipeline.splice(i,1);
 saveDashData(data);
 loadDashboard();
 }
-
-// Close modals on background click
-document.getElementById(‘adminModal’).addEventListener(‘click’, function(e) {
-if (e.target === this) closeAdmin();
+document.getElementById('adminModal').addEventListener('click',function(e){
+if(e.target===this)closeAdmin();
 });
-
-// SCROLL REVEAL
-const observer = new IntersectionObserver((entries) => {
-entries.forEach(e => { if (e.isIntersecting) e.target.classList.add(‘visible’); });
-}, { threshold: 0.1 });
-document.querySelectorAll(’.reveal’).forEach(el => observer.observe(el));
+var observer=new IntersectionObserver(function(entries){
+entries.forEach(function(e){if(e.isIntersecting)e.target.classList.add('visible');});
+},{threshold:0.1});
+document.querySelectorAll('.reveal').forEach(function(el){observer.observe(el);});
 </script>
-
 </body>
 </html>
